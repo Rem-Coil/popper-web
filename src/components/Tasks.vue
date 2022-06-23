@@ -21,9 +21,6 @@
         >
           <td>{{ item.name }}</td>
           <td>{{ item.surname }}</td>
-          <td>{{ item.fathername }}</td>
-          <td>{{ item.phone }}</td>
-          <td>{{ item.password }}</td>
           <td><v-btn icon>
         <v-icon>mdi-pencil</v-icon>
       </v-btn></td>
@@ -47,9 +44,6 @@ export default {
         columns: [
             'Имя',
             'Фамилия',
-            'Отчество',
-            'Телефон',
-            'Пароль',
             '', 
             ''
         ],
