@@ -20,9 +20,12 @@
           :key="item.id"
         >
           <td>{{ item.name }}</td>
-          <td>{{ item.surname }}</td>
-          <td><v-btn icon><v-icon>mdi-pencil</v-icon></v-btn></td>
-          <td><v-btn icon><v-icon>mdi-delete</v-icon></v-btn></td>
+          <td><v-btn icon>
+        <v-icon>mdi-pencil</v-icon>
+      </v-btn></td>
+      <td><v-btn icon>
+        <v-icon>mdi-delete</v-icon>
+      </v-btn></td>
         </tr>
       </tbody>
     </template>
@@ -33,32 +36,25 @@
 <script>
 
 export default {
-  name: 'taskBoard' ,
+  name: 'setTools' ,
 
   data () {
       return {
         columns: [
             'Имя',
-            'Фамилия',
             '', 
             ''
         ],
         workers: [
           {
-            id:1,
-            name: 'Илья',
-            surname: 'Родионов',
+            id: 1,
+            name: 'Илья'
           },
           {
-            id:2,
-            name: 'Илья',
-            surname: 'Родионов',
+            id: 2,
+            name: 'Илья'
           },
-          {
-            id:3,
-            name: 'Илья',
-            surname: 'Родионов',
-          }
+          
         ],
       }
     },

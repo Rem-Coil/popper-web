@@ -1,24 +1,51 @@
 <template>
-<div>
-<drawer/>
-<router-view/>
-</div>
-  <!-- <main-screen>
-    <worker-tab/>
-  </main-screen> -->
+
+<div id="app">
+    <v-flex>
+      <v-row>
+        <v-col cols = "2" id="drawer">
+          <navDrawer/>
+        </v-col>
+        <v-col cols="10">
+          <title-head/>
+          <router-view/>
+        </v-col>
+      </v-row>
+    </v-flex>    
+  </div>
 </template>
 
 <script>
-import Drawer from './components/Drawer.vue'
-// import mainScreen from './components/MainScreen.vue'
-// import workerTab from './components/Worker.vue'
-
+import navDrawer from './components/Drawer.vue'
+import titleHead from './components/Head.vue'
 export default {
   name: 'App',
   components: {
-    // mainScreen,
-    // workerTab,
-    Drawer
+        titleHead,
+    navDrawer
   },
 }
 </script>
+<style>
+.router-link-exact-active{
+  background-color: white;
+  width: 100%;
+  height: 48px;
+  padding: 0px;
+  color: #2196f3;
+  border-left: solid 5px #2196f3;
+  text-align: left;
+}
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  height: 100vh;   
+}
+
+#drawer {
+    padding-bottom: 0px;
+}
+</style>

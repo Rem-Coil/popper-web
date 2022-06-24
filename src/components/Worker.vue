@@ -1,4 +1,11 @@
 <template>
+<div>
+<div v-if=isLoading>
+    загрузка
+        </div>
+        <div v-else></div>
+  
+  
   <v-simple-table
     fixed-header
     height="85vh"
@@ -19,9 +26,9 @@
           v-for="item in workers"
           :key="item.id"
         >
-          <td>{{ item.name }}</td>
+          <td>{{ item.first_name }}</td>
+          <td>{{ item.second_name }}</td>
           <td>{{ item.surname }}</td>
-          <td>{{ item.fathername }}</td>
           <td>{{ item.phone }}</td>
           <td>{{ item.password }}</td>
           <td><v-btn icon>
@@ -34,16 +41,20 @@
       </tbody>
     </template>
   </v-simple-table>
+</div>
 </template>
 
 
 <script>
-
+import axios from 'axios';
 export default {
   name: 'workerTab' ,
-
+    async created(){
+        await this.load()
+    },
   data () {
       return {
+        isLoading: false,
         columns: [
             'Имя',
             'Фамилия',
@@ -53,145 +64,20 @@ export default {
             '', 
             ''
         ],
-        workers: [
-          {
-            id: 1,
-            name: 'Илья',
-            surname: 'Родионов',
-            fathername: 'Алексеевич',
-            phone: 89324855614,
-            password: 1234
-          },
-          {
-            id: 2,
-            name: 'Илья',
-            surname: 'Родионов',
-            fathername: 'Алексеевич',
-            phone: 89324855614,
-            password: 1234
-          },
-          {
-            id: 3,
-            name: 'Илья',
-            surname: 'Родионов',
-            fathername: 'Алексеевич',
-            phone: 89324855614,
-            password: 1234
-          },
-          {
-            id: 4,
-            name: 'Илья',
-            surname: 'Родионов',
-            fathername: 'Алексеевич',
-            phone: 89324855614,
-            password: 1234
-          },
-          {
-            id: 5,
-            name: 'Илья',
-            surname: 'Родионов',
-            fathername: 'Алексеевич',
-            phone: 89324855614,
-            password: 1234
-          },
-          {
-            id: 6,
-            name: 'Илья',
-            surname: 'Родионов',
-            fathername: 'Алексеевич',
-            phone: 89324855614,
-            password: 1234
-          },
-          {
-            id: 7,
-            name: 'Илья',
-            surname: 'Родионов',
-            fathername: 'Алексеевич',
-            phone: 89324855614,
-            password: 1234
-          },
-          {
-            id: 8,
-            name: 'Илья',
-            surname: 'Родионов',
-            fathername: 'Алексеевич',
-            phone: 89324855614,
-            password: 1234
-          },
-          {
-            id: 9,
-            name: 'Илья',
-            surname: 'Родионов',
-            fathername: 'Алексеевич',
-            phone: 89324855614,
-            password: 1234
-          },
-          {
-            id: 10,
-            name: 'Илья',
-            surname: 'Родионов',
-            fathername: 'Алексеевич',
-            phone: 89324855614,
-            password: 1234
-          },
-          {
-            id: 11,
-            name: 'Илья',
-            surname: 'Родионов',
-            fathername: 'Алексеевич',
-            phone: 89324855614,
-            password: 1234
-          },
-          {
-            id: 12,
-            name: 'Илья',
-            surname: 'Родионов',
-            fathername: 'Алексеевич',
-            phone: 89324855614,
-            password: 1234
-          },
-          {
-            id: 13,
-            name: 'Илья',
-            surname: 'Родионов',
-            fathername: 'Алексеевич',
-            phone: 89324855614,
-            password: 1234
-          },
-          {
-            id: 14,
-            name: 'Илья',
-            surname: 'Родионов',
-            fathername: 'Алексеевич',
-            phone: 89324855614,
-            password: 1234
-          },
-          {
-            id: 15,
-            name: 'Илья',
-            surname: 'Родионов',
-            fathername: 'Алексеевич',
-            phone: 89324855614,
-            password: 1234
-          },
-          {
-            id: 16,
-            name: 'Илья',
-            surname: 'Родионов',
-            fathername: 'Алексеевич',
-            phone: 89324855614,
-            password: 1234
-          },
-          {
-            id: 17,
-            name: 'Илья',
-            surname: 'Родионов',
-            fathername: 'Алексеевич',
-            phone: 89324855614,
-            password: 1234
-          },
-        ],
+        
+        workers: [],
       }
     },
+    methods: {
+        async load(){
+            this.isLoading=true;
+            const res = await axios.get('https://popper-service.herokuapp.com/operator?active_only=true');
+            this.workers = res.data;
+            this.isLoading=false;
+        }
+    }
   }
 </script>
+
+
+    //   indeterminate
