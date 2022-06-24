@@ -1,4 +1,6 @@
 <template>
+<div>
+  <title-head :title="'Настройки'"/>
   <v-simple-table
     fixed-header
     height="85vh"
@@ -30,14 +32,17 @@
       </tbody>
     </template>
   </v-simple-table>
+</div>
 </template>
 
 
 <script>
-
+import titleHead from './Head.vue'
 export default {
   name: 'setTools' ,
-
+  components: {
+        titleHead
+  },
   data () {
       return {
         columns: [

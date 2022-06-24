@@ -3,7 +3,7 @@
     width = "100%"
     flat = "true"
     >
-      <v-toolbar-title>Сотрудники</v-toolbar-title>
+      <v-toolbar-title>{{title}}</v-toolbar-title>
       <v-spacer></v-spacer>
 
       <v-btn icon>
@@ -20,6 +20,11 @@ export default {
 
   components: {
   },
+  props: {
+    title:{
+      type: String
+    }
+  }
 
     
 };

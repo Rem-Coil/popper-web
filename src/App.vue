@@ -7,7 +7,6 @@
           <navDrawer/>
         </v-col>
         <v-col cols="10">
-          <title-head/>
           <router-view/>
         </v-col>
       </v-row>
@@ -17,11 +16,9 @@
 
 <script>
 import navDrawer from './components/Drawer.vue'
-import titleHead from './components/Head.vue'
 export default {
   name: 'App',
   components: {
-        titleHead,
     navDrawer
   },
 }

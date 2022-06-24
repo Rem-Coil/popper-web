@@ -1,4 +1,6 @@
 <template>
+<div>
+  <title-head :title="'Список задач'"/>
   <v-simple-table
     fixed-header
     height="85vh"
@@ -27,14 +29,17 @@
       </tbody>
     </template>
   </v-simple-table>
+</div>
 </template>
 
 
 <script>
-
+import titleHead from './Head.vue'
 export default {
   name: 'taskBoard' ,
-
+components: {
+        titleHead
+  },
   data () {
       return {
         columns: [

@@ -1,10 +1,10 @@
 <template>
 <div>
+  <title-head :title="'Сотрудники'"/>
 <div v-if=isLoading>
     загрузка
         </div>
         <div v-else></div>
-  
   
   <v-simple-table
     fixed-header
@@ -46,12 +46,16 @@
 
 
 <script>
+import titleHead from './Head.vue'
 import axios from 'axios';
 export default {
   name: 'workerTab' ,
     async created(){
         await this.load()
     },
+    components: {
+        titleHead
+  },
   data () {
       return {
         isLoading: false,
