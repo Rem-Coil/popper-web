@@ -1,31 +1,26 @@
 <template>
-    <v-toolbar 
-    width = "100%"
-    flat = "true"
-    >
-      <v-toolbar-title>{{title}}</v-toolbar-title>
-      <v-spacer></v-spacer>
+  <v-toolbar width="100%" flat="true">
+    <v-toolbar-title>{{ title }}</v-toolbar-title>
+    <v-spacer></v-spacer>
 
-      <v-btn icon>
-        <v-icon>mdi-reload</v-icon>
-      </v-btn>
-    </v-toolbar>
+    <v-btn icon>
+      <v-icon>mdi-reload</v-icon>
+    </v-btn>
+  </v-toolbar>
 </template>
 
 
 <script>
-
 export default {
-  name: 'titleHead' ,
+  name: 'titleHead',
 
-  components: {
-  },
+  components: {},
   props: {
-    title:{
+    title: {
       type: String
     }
   }
 
-    
+
 };
 </script>

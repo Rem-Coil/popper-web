@@ -17,14 +17,6 @@
           :to="item.path"
           style="padding:0px;"
         >
-          <!-- <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item> -->
         <v-list-item-content style="padding:0px">
         <router-link :to="item.path" tag="button" 
         style="text-align: left"><v-icon style="margin-left:5%">{{ item.icon }}</v-icon>{{item.title}}</router-link>

@@ -1,6 +1,7 @@
 <template>
 
 <div id="app">
+  <v-app id="inspire">
     <v-flex>
       <v-row>
         <v-col cols = "2" id="drawer">
@@ -10,7 +11,8 @@
           <router-view/>
         </v-col>
       </v-row>
-    </v-flex>    
+    </v-flex>
+  </v-app>
   </div>
 </template>
 
