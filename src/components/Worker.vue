@@ -85,7 +85,6 @@
               style="width: 80%; margin: auto"
           ></v-text-field>
           <v-text-field
-              type="password"
               label="Пароль"
               v-model="editedItem.password"
               style="width: 80%; margin: auto"
