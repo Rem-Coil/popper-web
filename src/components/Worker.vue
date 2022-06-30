@@ -90,11 +90,15 @@
               style="width: 80%; margin: auto"
           ></v-text-field>
           <v-select
+              item-color="secondary"
               :items="roles"
               v-model="editedItem.role"
               label="Роль"
-              style="width: 80%; margin: auto"
+              style="width: 80%; margin: auto;"
           ></v-select>
+          <div v-if="isErrorInput">
+            <p style="color: red;">Заполните все поля</p>
+          </div>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="secondary" flat @click="saveWorker">Сохранить</v-btn>
@@ -121,6 +125,7 @@ export default {
   },
   data() {
     return {
+      isErrorInput: false,
       roles: ['operator', 'quality_engineer'],
       deleteDialog: false,
       dialog: false,
@@ -178,7 +183,6 @@ export default {
       const res = await axios.get('https://popper-service.herokuapp.com/operator?active_only=true');
       this.workers = res.data;
       this.isLoading = false;
-      console.log(res.data)
     },
     async deleteWorker()
     {
@@ -188,13 +192,20 @@ export default {
     },
     async saveWorker()
     {
-      if(this.editedItem.id!=0) {
-        await axios.put("https://popper-service.herokuapp.com/operator", this.editedItem);
-      }else{
-        await axios.post("https://popper-service.herokuapp.com/operator/sign_up", this.editedItem);
+      if(this.editedItem.second_name!=='' && this.editedItem.first_name!=='' && this.editedItem.surname!==''
+          && this.editedItem.password!=='' && this.editedItem.phone!=='') {
+        this.isErrorInput = false;
+        if (this.editedItem.id !== 0) {
+          await axios.put("https://popper-service.herokuapp.com/operator", this.editedItem);
+        } else {
+          await axios.post("https://popper-service.herokuapp.com/operator/sign_up", this.editedItem);
+        }
+        this.dialog = false;
+        await this.load();
       }
-      this.dialog=false;
-      await this.load();
+      else {
+        this.isErrorInput = true;
+      }
     }
   }
 }

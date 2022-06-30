@@ -9,7 +9,8 @@ export default new Vuetify({
             light: {
                 primary: '#eeeeee',
                 secondary: '#2196f3',
-                anchor: '#8c9eff',
+                anchor: '#dceffd',
+                warning: '#83C6F9'
             },
         },
     },

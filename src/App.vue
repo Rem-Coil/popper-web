@@ -27,7 +27,6 @@ export default {
 </script>
 <style>
 .router-link-exact-active{
-  background-color: white;
   width: 100%;
   height: 48px;
   padding: 0px;
