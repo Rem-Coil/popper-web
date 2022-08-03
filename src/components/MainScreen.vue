@@ -1,14 +1,24 @@
 <template>
-
-<div id="app">
-          <router-view/>
-  </div>
+    <v-app id="inspire">
+      <v-flex>
+        <v-row>
+          <v-col cols = "2" id="drawer">
+            <navDrawer/>
+          </v-col>
+          <v-col cols="10">
+            <router-view/>
+          </v-col>
+        </v-row>
+      </v-flex>
+    </v-app>
 </template>
 
 <script>
+import navDrawer from './Drawer.vue'
 export default {
-  name: 'App',
+  name: 'MainScreen',
   components: {
+    navDrawer
   },
 }
 </script>
@@ -27,10 +37,10 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  height: 100vh;   
+  height: 100vh;
 }
 
 #drawer {
-    padding-bottom: 0px;
+  padding-bottom: 0px;
 }
 </style>

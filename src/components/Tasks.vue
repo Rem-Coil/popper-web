@@ -42,13 +42,10 @@
           loading-text="Loading... Please wait"
           class="elevation-1"
       >
-<!--        <template v-slot:[`item.delete`]="props">-->
-<!--          <v-icon @click="openDeleteDialog(props.item.id)"> mdi-delete</v-icon>-->
-<!--        </template>-->
         <template v-slot:[`item.edit`]="props">
           <v-card-actions>
-          <v-icon @click="openEditDialog(props.item, 'Редактирование');"> mdi-pencil</v-icon>
-          <v-icon @click="openDeleteDialog(props.item.id)"> mdi-delete</v-icon>
+            <v-icon @click="openEditDialog(props.item, 'Редактирование');"> mdi-pencil</v-icon>
+            <v-icon @click="openDeleteDialog(props.item.id)"> mdi-delete</v-icon>
           </v-card-actions>
         </template>
         <template v-slot:[`item.batchList`]="props">
@@ -152,15 +149,17 @@
               <v-icon @click="openDeleteBatchDialog(props.item, props.item.id)"> mdi-delete</v-icon>
             </template>
             <template v-slot:[`item.progress`]="props">
-              <v-icon @click="openDeleteBatchDialog(props.item, props.item.id)"> mdi-table-eye</v-icon>
+              <router-link :to="'/Tasks/Progress/'+props.item.id" tag="button">
+                <v-icon> mdi-table-eye</v-icon>
+              </router-link>
             </template>
           </v-data-table>
           <v-card-actions>
-            <v-btn color="secondary" flat @click="openAddBatchDialog(defaultBatch)" style="margin: 1%">
+            <v-btn color="secondary" @click="openAddBatchDialog(defaultBatch)" style="margin: 1%">
               Добавить партию
             </v-btn>
             <v-spacer></v-spacer>
-            <v-btn color="secondary" flat @click="batchDialog = false" style="margin: 1%">Закрыть</v-btn>
+            <v-btn color="secondary" @click="batchDialog = false" style="margin: 1%">Закрыть</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -200,7 +199,7 @@
 
 
 <script>
-import titleHead from './Head.vue'
+import titleHead from './Head.vue';
 import axios from 'axios';
 
 export default {
@@ -255,7 +254,7 @@ export default {
         {text: 'Опрессовка', value: 'crimping', class: 'primary'},
         {text: 'ОТК', value: 'quality', class: 'primary'},
         {text: 'Испытания', value: 'testing', class: 'primary'},
-        {text: '', value: 'edit',  class: 'primary'}
+        {text: '', value: 'edit', class: 'primary'}
       ],
       batchHead: [
         {text: '', value: 'progress', width: '1%'},
@@ -332,8 +331,9 @@ export default {
           task_number: "",
           batch_number: 0,
           batch_size: 0
-        },
-            this.dialog = false;
+        }
+
+        this.dialog = false;
         await this.load();
       } else {
         this.isErrorInput = true;
@@ -355,22 +355,23 @@ export default {
       this.deleteBatchDialog = false;
       await this.load();
       this.tasks.forEach((item) => {
-            if (item.id == this.editedBatchTask.id) {
+            if (item.id === this.editedBatchTask.id) {
               this.openBatchDialog(item);
             }
           }
       );
     },
     async saveBatch() {
-        await axios.post("https://popper-service.herokuapp.com/batch", this.defaultBatch);
-        this.defaultBatch = {
-          task_id: 0,
-          batch_size: 0
-        },
-            this.addBatchDialog = false;
-        await this.load();
+      await axios.post("https://popper-service.herokuapp.com/batch", this.defaultBatch);
+      this.defaultBatch = {
+        task_id: 0,
+        batch_size: 0
+      }
+
+      this.addBatchDialog = false;
+      await this.load();
       this.tasks.forEach((item) => {
-            if (item.id == this.editedBatchTask.id) {
+            if (item.id === this.editedBatchTask.id) {
               this.openBatchDialog(item);
             }
           }
@@ -395,7 +396,6 @@ export default {
         temp.id = item.id;
         temp.task_name = item.task_name;
         temp.task_number = item.task_number;
-        console.log(item);
         temp.quantity = item.batches.reduce((acc, b) => acc + b.quantity, 0);
         temp.winding = item.batches.reduce((acc, b) => acc + b.winding, 0);
         temp.output = item.batches.reduce((acc, b) => acc + b.output, 0);
