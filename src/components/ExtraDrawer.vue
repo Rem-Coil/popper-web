@@ -13,7 +13,7 @@
   >
     <template v-slot:expanded-item="{headers}">
       <td :colspan="headers.length">
-        <div v-for="(item, i) in notFinish" :key="i">{{item}}</div>
+        <div v-for="(item, i) in notFinish" :key="i">{{ item }}</div>
       </td>
     </template>
   </v-data-table>
@@ -23,27 +23,27 @@
 import axios from "axios";
 
 export default {
-  props:{
+  props: {
     bobbin_id: String
   },
-  data () {
+  data() {
     return {
       expanded: [],
       singleExpand: false,
       headers: [
-        { text: '', value: 'data-table-expand' },
-        { text: 'Виды задач', value: 'name' },
+        {text: '', value: 'data-table-expand'},
+        {text: 'Виды задач', value: 'name'},
       ],
       itemHeaders: [
-        { text: '', value: 'data-table-expand' },
-        { text: 'Виды задач', value: 'name' },
+        {text: '', value: 'data-table-expand'},
+        {text: 'Виды задач', value: 'name'},
       ],
       actionType: [
         {
           name: 'Невыполненные',
         },
       ],
-      notFinish:[],
+      notFinish: [],
       translate: [
         {
           ru: 'Намотка',
@@ -77,27 +77,29 @@ export default {
       ]
     }
   },
-  async created(){
-      this.$watch(
-          () => this.$route.params,
-          async () => {
-            await this.load();
-          }
-      );
+  async created() {
+    this.$watch(
+        () => this.$route.params,
+        async () => {
+          await this.load();
+        }
+    );
+
+    await this.load();
   },
-  methods:{
+  methods: {
     async load() {
-      const res = await axios.get('https://popper-service.herokuapp.com/action/full/bobbin/' + this.bobbin_id);
-      this.notFinish=[];
-      let temp=[];
-      for (let item of res.data){
+      const res = await axios.get('http://remcoil.space:8080/action/full/bobbin/' + this.bobbin_id);
+      this.notFinish = [];
+      let temp = [];
+      for (let item of res.data) {
         temp.push(item.action_type);
       }
       let all = ['winding', 'output', 'isolation', 'molding', 'crimping', 'quality', 'testing'];
       const result = all.filter(el => !temp.includes(el));
       this.translateActions(result);
     },
-    translateActions(result){
+    translateActions(result) {
       for (const r of result) {
         for (const t of this.translate) {
           if (t.en === r) {

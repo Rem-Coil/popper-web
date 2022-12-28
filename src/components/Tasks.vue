@@ -130,7 +130,7 @@
 
       <v-dialog v-model="batchDialog" persistent max-width="70vw">
         <v-card>
-          <v-card-title class="headline" style="margin-left: 2%; margin-top: 2%">
+          <v-card-title class="headline" style="margin-left: 2%;">
             <p>Партии</p>
             <v-spacer></v-spacer>
             <v-icon @click="batchDialog=false" style="margin-top: -2%"> mdi-close</v-icon>
@@ -139,17 +139,21 @@
               :headers="batchHead"
               :items="batches"
               height="60vh"
-              style="margin-left: 2%; margin-right: 2%"
+              style="margin-left: 1%; margin-right: 1%"
               :items-per-page="-1"
               :footer-props="footerProps"
               hide-default-footer
               fixed-header
           >
+            <template v-slot:[`item.qrcode`]="props">
+              <a :href="'http://remcoil.space:8080/batch/codes/'+props.item.id" style="text-decoration: none;" target="_blank">
+                <v-icon> mdi-qrcode</v-icon></a>
+            </template>
             <template v-slot:[`item.delete`]="props">
               <v-icon @click="openDeleteBatchDialog(props.item, props.item.id)"> mdi-delete</v-icon>
             </template>
             <template v-slot:[`item.progress`]="props">
-              <router-link :to="'/Tasks/Progress/'+props.item.id" tag="button">
+              <router-link :to="'/Progress/'+props.item.id" tag="button">
                 <v-icon> mdi-table-eye</v-icon>
               </router-link>
             </template>
@@ -267,6 +271,7 @@ export default {
         {text: 'Опрессовка', value: 'crimping'},
         {text: 'ОТК', value: 'quality'},
         {text: 'Испытания', value: 'testing'},
+        {text: '', value: 'qrcode'},
         {text: '', value: 'delete'}
       ],
       tasks: [],
@@ -313,19 +318,19 @@ export default {
     async load() {
       this.tasks = [];
       this.isLoading = true;
-      const res = await axios.get('https://popper-service.herokuapp.com/task/full');
+      const res = await axios.get('http://remcoil.space:8080/task/full');
       this.totalCount(res.data);
       this.isLoading = false;
     },
     async deleteTask() {
-      await axios.delete("https://popper-service.herokuapp.com/task/" + this.editedIndex);
+      await axios.delete("http://remcoil.space:8080/task/" + this.editedIndex);
       this.deleteDialog = false;
       await this.load();
     },
     async saveTasks() {
       if (this.defaultItem.task_name !== '' && this.defaultItem.task_number !== '') {
         this.isErrorInput = false;
-        await axios.post("https://popper-service.herokuapp.com/task", this.defaultItem);
+        await axios.post("http://remcoil.space:8080/task", this.defaultItem);
         this.defaultItem = {
           task_name: "",
           task_number: "",
@@ -343,7 +348,7 @@ export default {
       if (this.editedItem.task_name !== '' && this.editedItem.task_number !== '') {
         this.isErrorInput = false;
         console.log('send');
-        await axios.put("https://popper-service.herokuapp.com/task", this.editedItem);
+        await axios.put("http://remcoil.space:8080/task", this.editedItem);
         this.editDialog = false;
         await this.load();
       } else {
@@ -351,7 +356,7 @@ export default {
       }
     },
     async deleteBatch() {
-      await axios.delete("https://popper-service.herokuapp.com/batch/" + this.editingBatchIndex);
+      await axios.delete("http://remcoil.space:8080/batch/" + this.editingBatchIndex);
       this.deleteBatchDialog = false;
       await this.load();
       this.tasks.forEach((item) => {
@@ -362,7 +367,7 @@ export default {
       );
     },
     async saveBatch() {
-      await axios.post("https://popper-service.herokuapp.com/batch", this.defaultBatch);
+      await axios.post("http://remcoil.space:8080/batch", this.defaultBatch);
       this.defaultBatch = {
         task_id: 0,
         batch_size: 0

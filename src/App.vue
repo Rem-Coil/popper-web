@@ -11,26 +11,19 @@ export default {
   components: {
   },
 }
+document.title = 'Rem&Coil';
 </script>
 <style>
-.router-link-exact-active{
-  width: 100%;
-  height: 48px;
-  padding: 0px;
-  color: #2196f3;
-  border-left: solid 5px #2196f3;
-  text-align: left;
-}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  height: 100vh;   
+  height: 100vh;
 }
 
 #drawer {
-    padding-bottom: 0px;
+    padding-bottom: 0;
 }
 </style>

@@ -3,7 +3,6 @@ import Router from 'vue-router';
 
 import Worker from '../components/Worker.vue';
 import Tasks from '../components/Tasks.vue';
-import Settings from '../components/Settings.vue';
 import MainScreen from '../components/MainScreen.vue';
 import ProgressPage from "@/components/Progress";
 import TimeLine from "@/components/TimeLine";
@@ -18,20 +17,16 @@ export default new Router({
             component: MainScreen,
             children: [
                 {
-                    path: "/",
+                    path: "/worker",
                     component: Worker,
                 }, {
-                    path: "/tasks",
+                    path: "/",
                     component: Tasks,
-                },
-                {
-                    path: "/settings",
-                    component: Settings,
                 }
             ]
         },
         {
-            path: "/tasks/progress/:id",
+            path: "/progress/:id",
             component: ProgressPage,
             props: true,
             children: [

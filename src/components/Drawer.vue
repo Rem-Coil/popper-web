@@ -15,14 +15,13 @@
             :key="item.title"
             link
             :to="item.path"
-            style="padding:0;"
+            style="padding:0; "
+            active-class="act-link"
+            color = "#dceffdff"
         >
-          <v-list-item-content style="padding:0">
-            <router-link :to="item.path" tag="button"
-                         style="text-align: left">
-              <v-icon style="margin-left:5%">{{ item.icon }}</v-icon>
-              {{ item.title }}
-            </router-link>
+          <v-list-item-content style="padding:0;" :to="item.path">
+           <div class="div1"> <v-icon style="margin-left:5%">{{ item.icon }}</v-icon>
+            <p style="margin-top: auto; margin-bottom: auto; margin-left: 3%">{{ item.title }}</p></div>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -37,11 +36,33 @@ export default {
   data() {
     return {
       items: [
-        {title: '  Список заданий', icon: 'mdi-order-bool-descending-variant', path: "/Tasks"},
-        {title: '  Сотрудники', icon: 'mdi-account', path: "/"},
-        {title: '  Настройки', icon: 'mdi-cog', path: "/Settings"},
+        {title: 'Список заданий', icon: 'mdi-order-bool-descending-variant', path: "/"},
+        {title: 'Сотрудники', icon: 'mdi-account', path: "/Worker"}
       ],
     }
   },
 };
 </script>
+
+<style>
+
+.act-link{
+  border-left: solid 5px #2196f3;
+  background-color: #dceffd;
+}
+
+.act-link div{
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  text-align: left;
+  color: #2196f3;
+}
+
+.act-link p{
+  color: #2196f3;
+}
+.div1 {
+  display: flex;
+  flex-direction: row;}
+</style>

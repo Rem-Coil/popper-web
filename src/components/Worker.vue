@@ -38,7 +38,7 @@
           :footer-props="footerProps"
           hide-default-footer
           fixed-header
-          :loading = "isLoading"
+          :loading="isLoading"
           loading-text="Loading... Please wait"
       >
         <template v-slot:[`item.delete`]="props">
@@ -63,7 +63,7 @@
       </v-dialog>
       <v-dialog v-model="dialog" persistent max-width="500">
         <v-card>
-          <v-card-title class="headline">{{this.str}}</v-card-title>
+          <v-card-title class="headline">{{ this.str }}</v-card-title>
           <v-text-field
               label="Имя"
               v-model="editedItem.first_name"
@@ -129,9 +129,21 @@ export default {
       roles: ['operator', 'quality_engineer'],
       deleteDialog: false,
       dialog: false,
-      str:'',
+      str: '',
       editingIndex: -1,
+      translate: [
+        {
+          ru: 'Инженер качества',
+          en: 'quality_engineer'
+        },
+        {
+          ru: 'Оператор',
+          en: 'operator'
+        },
+
+      ],
       editedItem: {
+        id: 0,
         first_name: '',
         second_name: '',
         surname: '',
@@ -141,7 +153,7 @@ export default {
         role: 'operator'
       },
       defaultItem: {
-        id:0,
+        id: 0,
         first_name: '',
         second_name: '',
         surname: '',
@@ -176,34 +188,65 @@ export default {
       this.str = str;
       this.editedIndex = this.workers.indexOf(item)
       this.editedItem = Object.assign({}, item)
+      console.log(this.editedItem)
+      console.log(item)
       this.dialog = true;
     },
     async load() {
+      this.workers = [];
       this.isLoading = true;
-      const res = await axios.get('https://popper-service.herokuapp.com/operator?active_only=true');
-      this.workers = res.data;
+      const res = await axios.get('http://remcoil.space:8080/operator?active_only=true');
+      await this.totalCount(res.data);
       this.isLoading = false;
     },
-    async deleteWorker()
-    {
-      await axios.delete("https://popper-service.herokuapp.com/operator/"+this.editedIndex);
-      this.deleteDialog=false;
+    totalCount: async function (workers) {
+      for (const worker of workers) {
+        // let temp = {
+        //   id: Number,
+        //   first_name: String,
+        //   second_name: String,
+        //   surname: String,
+        //   phone: String,
+        //   password: String,
+        //   active: Boolean,
+        //   role: String
+        // };
+        let temp = {};
+
+        temp.id = worker.id;
+        temp.first_name = worker.first_name;
+        temp.second_name = worker.second_name;
+        temp.surname = worker.surname;
+        temp.phone = worker.phone;
+        temp.password = worker.password;
+        temp.active = worker.active;
+
+        if (worker.role === "quality_engineer") {
+          temp.role = "Инженер качества";
+        } else {
+          temp.role = "Оператор";
+        }
+        this.workers.push(temp);
+      }
+    },
+    async deleteWorker() {
+      await axios.delete("http://remcoil.space:8080/operator/" + this.editedIndex);
+      this.deleteDialog = false;
       await this.load();
     },
-    async saveWorker()
-    {
-      if(this.editedItem.second_name!=='' && this.editedItem.first_name!=='' && this.editedItem.surname!==''
-          && this.editedItem.password!=='' && this.editedItem.phone!=='') {
+    async saveWorker() {
+      if (this.editedItem.second_name !== '' && this.editedItem.first_name !== '' && this.editedItem.surname !== ''
+          && this.editedItem.password !== '' && this.editedItem.phone !== '') {
         this.isErrorInput = false;
+        console.log(this.editedItem)
         if (this.editedItem.id !== 0) {
-          await axios.put("https://popper-service.herokuapp.com/operator", this.editedItem);
+          await axios.put("http://remcoil.space:8080/operator", this.editedItem);
         } else {
-          await axios.post("https://popper-service.herokuapp.com/operator/sign_up", this.editedItem);
+          await axios.post("http://remcoil.space:8080/operator/sign_up", this.editedItem);
         }
         this.dialog = false;
         await this.load();
-      }
-      else {
+      } else {
         this.isErrorInput = true;
       }
     }

@@ -3,6 +3,7 @@
       align-top
       dense
       style="margin-left: 10%; background-color: #eeeeee"
+      v-if="items.length!==0"
   >
     <v-timeline-item
         v-for="item in items"
@@ -21,7 +22,8 @@
             <v-row>
               <p style="font-size: 28px; margin-bottom: 0; margin-left: 2%">{{ item.action_type }}</p>
               <v-spacer></v-spacer>
-              <p style="font-size: 16px; margin-bottom: 0;">{{ item.done_time }}</p>
+              <p style="font-size: 14px; margin-bottom: 0;">{{ item.done_time.split(' ')[0] }} &nbsp;
+                {{ item.done_time.split(' ')[1] }}</p>
             </v-row>
             <v-row>
               <p style="font-size: 16px; margin-top: 0; margin-left: 2%">{{ item.name }}</p>
@@ -51,7 +53,7 @@ export default {
           await this.load();
         }
     );
-    console.log('Timeline:');
+
     await this.load();
   },
   props: {
@@ -93,7 +95,7 @@ export default {
   }),
   methods: {
     async load() {
-      const res = await axios.get('https://popper-service.herokuapp.com/action/full/bobbin/' + this.bobbin_id);
+      const res = await axios.get('http://remcoil.space:8080/action/full/bobbin/' + this.bobbin_id);
       this.items = [];
       await this.totalCount(res.data);
     },
@@ -117,10 +119,12 @@ export default {
             temp.action_type = t.ru;
           }
         }
-        temp.done_time = new Date(action.done_time).getHours() + ':' + new Date(action.done_time).getMinutes() + ' ' + new Date(action.done_time).toLocaleDateString();
+        let date = new Date(action.done_time);
+        let minutes = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes();
+        temp.done_time = date.getHours() + ':' + minutes + ' ' + date.toLocaleDateString();
         temp.name = action.firstname + ' ' + action.second_name;
         temp.successful = action.successful;
-        let res = await axios.get('https://popper-service.herokuapp.com/action/comment/' + action.action_id);
+        let res = await axios.get('http://remcoil.space:8080/comment/' + action.action_id);
         temp.comment = res.data.comment;
         if (action.successful) {
           temp.color = 'green lighten-1';
