@@ -146,7 +146,7 @@
               fixed-header
           >
             <template v-slot:[`item.qrcode`]="props">
-              <a :href="'http://remcoil.space:8080/batch/codes/'+props.item.id" style="text-decoration: none;" target="_blank">
+              <a :href="domain + 'batch/'+props.item.id+'/codes'" style="text-decoration: none;" target="_blank">
                 <v-icon> mdi-qrcode</v-icon></a>
             </template>
             <template v-slot:[`item.delete`]="props">
@@ -205,7 +205,7 @@
 <script>
 import titleHead from './Head.vue';
 import axios from 'axios';
-
+import {DOMAIN_NAME} from "@/api/api";
 export default {
   name: "tasksScreen",
   async created() {
@@ -216,6 +216,7 @@ export default {
   },
   data() {
     return {
+      domain : DOMAIN_NAME,
       expanded: [],
       singleExpand: false,
       isErrorInput: false,
@@ -318,19 +319,19 @@ export default {
     async load() {
       this.tasks = [];
       this.isLoading = true;
-      const res = await axios.get('http://remcoil.space:8080/task/full');
+      const res = await axios.get(DOMAIN_NAME + '/task/full');
       this.totalCount(res.data);
       this.isLoading = false;
     },
     async deleteTask() {
-      await axios.delete("http://remcoil.space:8080/task/" + this.editedIndex);
+      await axios.delete(DOMAIN_NAME + "/task/" + this.editedIndex);
       this.deleteDialog = false;
       await this.load();
     },
     async saveTasks() {
       if (this.defaultItem.task_name !== '' && this.defaultItem.task_number !== '') {
         this.isErrorInput = false;
-        await axios.post("http://remcoil.space:8080/task", this.defaultItem);
+        await axios.post(DOMAIN_NAME + "task", this.defaultItem);
         this.defaultItem = {
           task_name: "",
           task_number: "",
@@ -348,7 +349,7 @@ export default {
       if (this.editedItem.task_name !== '' && this.editedItem.task_number !== '') {
         this.isErrorInput = false;
         console.log('send');
-        await axios.put("http://remcoil.space:8080/task", this.editedItem);
+        await axios.put(DOMAIN_NAME+"task", this.editedItem);
         this.editDialog = false;
         await this.load();
       } else {
@@ -356,7 +357,7 @@ export default {
       }
     },
     async deleteBatch() {
-      await axios.delete("http://remcoil.space:8080/batch/" + this.editingBatchIndex);
+      await axios.delete(DOMAIN_NAME+"batch/" + this.editingBatchIndex);
       this.deleteBatchDialog = false;
       await this.load();
       this.tasks.forEach((item) => {
@@ -367,7 +368,7 @@ export default {
       );
     },
     async saveBatch() {
-      await axios.post("http://remcoil.space:8080/batch", this.defaultBatch);
+      await axios.post(DOMAIN_NAME+"batch", this.defaultBatch);
       this.defaultBatch = {
         task_id: 0,
         batch_size: 0

@@ -1,4 +1,6 @@
 <template>
+<!--  <div style="background-color: #2c3e50; width: 100%; height: 100%;">-->
+<!--  </div>-->
   <v-data-table
       :headers="headers"
       :items="actionType"
@@ -6,8 +8,6 @@
       :expanded.sync="expanded"
       item-key="name"
       show-expand
-      class="elevation-1"
-      style="height: 101%;"
       hide-default-header
       hide-default-footer
   >
@@ -21,6 +21,7 @@
 
 <script>
 import axios from "axios";
+import {DOMAIN_NAME} from "@/api/api";
 
 export default {
   props: {
@@ -89,7 +90,7 @@ export default {
   },
   methods: {
     async load() {
-      const res = await axios.get('http://remcoil.space:8080/action/full/bobbin/' + this.bobbin_id);
+      const res = await axios.get(DOMAIN_NAME+'action/full/bobbin/' + this.bobbin_id);
       this.notFinish = [];
       let temp = [];
       for (let item of res.data) {
@@ -107,8 +108,11 @@ export default {
           }
         }
       }
-      console.log(this.notFinish)
     }
   }
 }
 </script>
+
+
+<!--class="elevation-1"-->
+<!--style="height: 100%; width: 100%"-->

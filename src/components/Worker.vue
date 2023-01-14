@@ -41,6 +41,11 @@
           :loading="isLoading"
           loading-text="Loading... Please wait"
       >
+        <template v-slot:[`item.role`]="props">
+          <div v-if="props.item.role ==='quality_engineer'" >Инженер качества</div>
+          <div v-if="props.item.role ==='operator'" >Оператор</div>
+          <div v-if="props.item.role ==='admin'" >Администратор</div>
+        </template>
         <template v-slot:[`item.delete`]="props">
           <v-icon @click="openDeleteDialog(props.item.id)"> mdi-delete</v-icon>
         </template>
@@ -92,6 +97,8 @@
           <v-select
               item-color="secondary"
               :items="roles"
+              item-text="ru"
+              item-value="en"
               v-model="editedItem.role"
               label="Роль"
               style="width: 80%; margin: auto;"
@@ -114,6 +121,7 @@
 <script>
 import titleHead from './Head.vue'
 import axios from 'axios';
+import {DOMAIN_NAME} from "@/api/api";
 
 export default {
   name: 'workerTab',
@@ -126,12 +134,11 @@ export default {
   data() {
     return {
       isErrorInput: false,
-      roles: ['operator', 'quality_engineer'],
       deleteDialog: false,
       dialog: false,
       str: '',
       editingIndex: -1,
-      translate: [
+      roles: [
         {
           ru: 'Инженер качества',
           en: 'quality_engineer'
@@ -139,6 +146,10 @@ export default {
         {
           ru: 'Оператор',
           en: 'operator'
+        },
+        {
+          ru: 'Администратор',
+          en: 'admin'
         },
 
       ],
@@ -195,22 +206,12 @@ export default {
     async load() {
       this.workers = [];
       this.isLoading = true;
-      const res = await axios.get('http://remcoil.space:8080/operator?active_only=true');
+      const res = await axios.get(DOMAIN_NAME+'operator?active_only=true');
       await this.totalCount(res.data);
       this.isLoading = false;
     },
     totalCount: async function (workers) {
       for (const worker of workers) {
-        // let temp = {
-        //   id: Number,
-        //   first_name: String,
-        //   second_name: String,
-        //   surname: String,
-        //   phone: String,
-        //   password: String,
-        //   active: Boolean,
-        //   role: String
-        // };
         let temp = {};
 
         temp.id = worker.id;
@@ -220,17 +221,13 @@ export default {
         temp.phone = worker.phone;
         temp.password = worker.password;
         temp.active = worker.active;
+        temp.role = worker.role;
 
-        if (worker.role === "quality_engineer") {
-          temp.role = "Инженер качества";
-        } else {
-          temp.role = "Оператор";
-        }
         this.workers.push(temp);
       }
     },
     async deleteWorker() {
-      await axios.delete("http://remcoil.space:8080/operator/" + this.editedIndex);
+      await axios.delete(DOMAIN_NAME + "/operator/" + this.editedIndex);
       this.deleteDialog = false;
       await this.load();
     },
@@ -240,9 +237,9 @@ export default {
         this.isErrorInput = false;
         console.log(this.editedItem)
         if (this.editedItem.id !== 0) {
-          await axios.put("http://remcoil.space:8080/operator", this.editedItem);
+          await axios.put(DOMAIN_NAME+"operator", this.editedItem);
         } else {
-          await axios.post("http://remcoil.space:8080/operator/sign_up", this.editedItem);
+          await axios.post(DOMAIN_NAME+"operator/sign_up", this.editedItem);
         }
         this.dialog = false;
         await this.load();

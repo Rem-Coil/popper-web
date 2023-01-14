@@ -20,7 +20,7 @@
             color = "#dceffdff"
         >
           <v-list-item-content style="padding:0;" :to="item.path">
-           <div class="div1"> <v-icon style="margin-left:5%">{{ item.icon }}</v-icon>
+           <div class="div1"> <v-icon style="margin-left:7%">{{ item.icon }}</v-icon>
             <p style="margin-top: auto; margin-bottom: auto; margin-left: 3%">{{ item.title }}</p></div>
           </v-list-item-content>
         </v-list-item>
@@ -37,7 +37,7 @@ export default {
     return {
       items: [
         {title: 'Список заданий', icon: 'mdi-order-bool-descending-variant', path: "/"},
-        {title: 'Сотрудники', icon: 'mdi-account', path: "/Worker"}
+        {title: 'Сотрудники', icon: 'mdi-account', path: "/worker"}
       ],
     }
   },
@@ -47,14 +47,14 @@ export default {
 <style>
 
 .act-link{
-  border-left: solid 5px #2196f3;
   background-color: #dceffd;
+  border-left: solid 5px #2196f3;
 }
 
 .act-link div{
   width: 100%;
-  height: 100%;
-  padding: 0;
+  height: 3em;
+  border-left: solid 6px #2196f3;
   text-align: left;
   color: #2196f3;
 }
