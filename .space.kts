@@ -61,3 +61,23 @@ job("Build and deploy web") {
 
 val ScriptApi.currentVersion: String
     get() = "${parameters["major-version"]}.0-dev-${executionNumber()}"
+
+
+job("Test commits") {
+    host(displayName = "Show commits") {
+        kotlinScript(displayName = "Print") { api ->
+            val commits = api.space().projects.commits.commits(
+                project = api.projectIdentifier(),
+                repository = "web"
+            )
+
+            println("-------------------------------")
+            println("Commit history")
+            println("-------------------------------")
+
+            for (commitInfo in commits.data) {
+                println(commitInfo.message)
+            }
+        }
+    }
+}
