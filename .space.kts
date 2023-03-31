@@ -3,7 +3,7 @@ import circlet.pipelines.script.ScriptApi
 job("Build and deploy web") {
     parameters {
         secret("firebase_token", value = "{{ project:popper-web-firebase-token }}")
-        text("major-version", value = "{{ project:popper-major-version }}")
+        text("version", value = "{{ project:system-version }}")
     }
 
     startOn {
@@ -57,7 +57,22 @@ job("Build and deploy web") {
             """
         }
     }
+
+    host(displayName = "Send notification") {
+        kotlinScript(displayName = "Send") { api ->
+            api.space().chats.messages.sendMessage(
+                channel = ChannelIdentifier.Channel(ChatChannel.FromName("Deployment Notifications")),
+                content = ChatMessage.Text(
+                    """
+                        :zap: :zap: Новая версия [Веба](https://remcoil.site/) выложена!!!
+                        Текущая версия: **${api.currentVersion}**
+                    """.trimIndent()
+                )
+            )
+        }
+    }
 }
 
+
 val ScriptApi.currentVersion: String
-    get() = "${parameters["major-version"]}.0-dev-${executionNumber()}"
+    get() = "${parameters["version"]}-dev-${executionNumber()}"
