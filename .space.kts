@@ -64,20 +64,17 @@ val ScriptApi.currentVersion: String
 
 
 job("Test commits") {
+    startOn {
+        gitPush {
+            enabled = false
+        }
+    }
+
     host(displayName = "Show commits") {
         kotlinScript(displayName = "Print") { api ->
-            val commits = api.space().projects.commits.commits(
-                project = api.projectIdentifier(),
-                repository = "web"
-            )
-
-            println("-------------------------------")
-            println("Commit history")
-            println("-------------------------------")
-
-            for (commitInfo in commits.data) {
-                println(commitInfo.message)
-            }
+            val channel = ChannelIdentifier.Channel(ChatChannel.FromName("Deployment Notifications"))
+            val content = ChatMessage.Text("Test Message")
+            api.space().chats.messages.sendMessage(channel = channel, content = content)
         }
     }
 }
