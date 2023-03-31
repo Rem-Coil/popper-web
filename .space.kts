@@ -73,8 +73,20 @@ job("Test commits") {
     host(displayName = "Show commits") {
         kotlinScript(displayName = "Print") { api ->
             val channel = ChannelIdentifier.Channel(ChatChannel.FromName("Deployment Notifications"))
-            val content = ChatMessage.Text("Test Message")
-            api.space().chats.messages.sendMessage(channel = channel, content = content)
+
+            val content = mutableListOf<ChatMessage>()
+            content.add(ChatMessage.Text("Test emoji \uD83D\uDD25 ⚡ \uD83D\uDDF2 :zap:"))
+            content.add(ChatMessage.Text(
+                """
+                Test 
+                Multiline
+                Message
+                """.trimIndent()
+            ))
+
+            for (chatMessage in content) {
+                api.space().chats.messages.sendMessage(channel = channel, content = chatMessage)
+            }
         }
     }
 }
