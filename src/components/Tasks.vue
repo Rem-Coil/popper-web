@@ -146,8 +146,9 @@
               fixed-header
           >
             <template v-slot:[`item.qrcode`]="props">
-              <a :href="domain + 'batch/'+props.item.id+'/codes'" style="text-decoration: none;" target="_blank">
-                <v-icon> mdi-qrcode</v-icon></a>
+              <router-link :to="'/qrcode/'+props.item.id" tag="button">
+                <v-icon> mdi-qrcode</v-icon>
+              </router-link>
             </template>
             <template v-slot:[`item.delete`]="props">
               <v-icon @click="openDeleteBatchDialog(props.item, props.item.id)"> mdi-delete</v-icon>

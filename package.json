@@ -12,6 +12,7 @@
     "core-js": "^3.8.3",
     "firebase": "^9.9.1",
     "jwt-decode": "^3.1.2",
+    "qrcode.vue": "^1.7.0",
     "vue": "^2.6.14",
     "vue-router": "^3.5.3",
     "vuetify": "^2.6.0"

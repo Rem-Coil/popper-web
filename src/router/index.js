@@ -7,6 +7,7 @@ import Tasks from '../components/Tasks.vue';
 import MainScreen from '../components/MainScreen.vue';
 import ProgressPage from "@/components/progress/Progress";
 import TimeLine from "@/components/progress/TimeLine";
+import QRCode from "@/components/QRCode";
 
 Vue.use(Router);
 
@@ -53,6 +54,11 @@ export default new Router({
         {
             path: "/login",
             component: Login,
+        },
+        {
+            path: "/qrcode/:id",
+            component: QRCode,
+            props: true,
         }
     ]
 });

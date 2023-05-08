@@ -1,1 +1,1 @@
-export const DOMAIN_NAME = 'https://api.popper.remcoil.space/';
+export const DOMAIN_NAME = 'https://api.remcoil.webtm.ru/';

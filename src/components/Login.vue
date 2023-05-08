@@ -1,38 +1,33 @@
 <template>
   <v-app id="inspire">
     <v-main>
-      <v-container fluid fill-height>
+      <v-container fluid fill-height class="back">
         <v-layout align-center justify-center>
-          <v-flex xs12 sm8 md4>
-            <v-card class="elevation-12">
-              <v-toolbar color="secondary">
-                <v-toolbar-title style="color: #fff">Вход</v-toolbar-title>
-              </v-toolbar>
+          <v-flex xs12 sm8 md3>
+            <v-card class="card" flat>
               <v-card-text>
+                <div class="title">Вход</div>
                 <v-form>
                   <v-text-field
-                      prepend-icon="mdi-phone"
                       name="phone"
-                      label="Номер телефона"
+                      label="Логин"
                       type="phone"
                       v-model="admin.phone"
-                      :error-messages=error
                   />
 
                   <v-text-field
                       id="password"
-                      prepend-icon="mdi-lock"
                       name="password"
                       label="Пароль"
                       type="password"
                       v-model="admin.password"
+                      :error-messages=error
                   />
 
                 </v-form>
               </v-card-text>
               <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="secondary" @click="signIN">Войти</v-btn>
+                <v-btn depressed class="bt" color="secondary" @click="signIN">Войти</v-btn>
               </v-card-actions>
             </v-card>
           </v-flex>
@@ -70,6 +65,7 @@ export default {
 
         if (decoded.role !== 'admin') {
           this.error = "У вас нет доступа к сайту!";
+          return;
         }
 
         localStorage.setItem('token', token);
@@ -83,3 +79,23 @@ export default {
   }
 }
 </script>
+
+<style>
+.back{
+  background-color: #0A60AD;
+  align-content: center;
+}
+
+.title{
+  font-size: 14em;
+}
+
+.bt{
+  width: 14em;
+  margin: auto;
+}
+
+.card{
+  border: white 20px solid;
+}
+</style>
