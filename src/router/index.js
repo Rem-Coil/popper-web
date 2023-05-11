@@ -8,6 +8,7 @@ import MainScreen from '../components/MainScreen.vue';
 import ProgressPage from "@/components/progress/Progress";
 import TimeLine from "@/components/progress/TimeLine";
 import QRCode from "@/components/QRCode";
+import TechSpecification from "@/components/TechSpecification";
 
 Vue.use(Router);
 
@@ -35,6 +36,10 @@ export default new Router({
                 }, {
                     path: "",
                     component: Tasks,
+                },
+                {
+                    path: "TechSpecification",
+                    component: TechSpecification,
                 }
             ]
         },

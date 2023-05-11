@@ -72,8 +72,6 @@ export default {
           this.products.push(product)
       });
       this.stroke = Math.floor(this.products.length/7) +1;
-      console.log(this.stroke)
-      console.log(this.products)
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <title-head :title="'Список задач'"/>
-    <v-card style="margin-right:2%; background-color: #eeeeee;">
+    <title-head :title="'Наборы'"/>
+    <v-card flat style="margin-right:2%; background-color: #eeeeee;">
       <v-card-title>
         <v-flex>
           <v-row>

@@ -36,8 +36,9 @@ export default {
   data() {
     return {
       items: [
-        {title: 'Список заданий', icon: 'mdi-order-bool-descending-variant', path: "/"},
-        {title: 'Сотрудники', icon: 'mdi-account', path: "/worker"}
+        {title: 'Наборы', icon: 'mdi-order-bool-descending-variant', path: "/"},
+        {title: 'Сотрудники', icon: 'mdi-account', path: "/worker"},
+        {title: 'Тех. задания', icon: 'mdi-book', path: "/TechSpecification"}
       ],
     }
   },
