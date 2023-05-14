@@ -45,7 +45,7 @@
         <template v-slot:[`item.edit`]="props">
           <v-card-actions>
             <v-icon @click="openEditDialog(props.item, 'Редактирование');"> mdi-pencil</v-icon>
-            <v-icon @click="openDeleteDialog(props.item.id)"> mdi-delete</v-icon>
+            <v-icon @click="openDeleteDialog(props.item.id);"> mdi-delete</v-icon>
           </v-card-actions>
         </template>
         <template v-slot:[`item.batchList`]="props">
@@ -71,27 +71,31 @@
         <v-card>
           <v-card-title class="headline">{{ this.str }}</v-card-title>
           <v-text-field
-              label="Название"
-              v-model="defaultItem.task_name"
-              style="width: 80%; margin: auto"
-          ></v-text-field>
-          <v-text-field
-              label="Номер"
-              v-model="defaultItem.task_number"
+              label="Номер набора"
+              v-model="defaultItem.kit_number"
               style="width: 80%; margin: auto"
           ></v-text-field>
           <v-text-field
               label="Кол-во партий"
-              v-model.number="defaultItem.batch_number"
+              v-model.number="defaultItem.batches_quantity"
               style="width: 80%; margin: auto"
               type="number"
           ></v-text-field>
           <v-text-field
-              label="Кол-во катушек в париях"
+              label="Кол-во изделий в париях"
               v-model.number="defaultItem.batch_size"
               style="width: 80%; margin: auto"
               type="number"
           ></v-text-field>
+          <v-select
+              item-color="secondary"
+              :items="techSpec"
+              item-text="titleSpec"
+              item-value="specification_id"
+              v-model="defaultItem.specification_id"
+              label="Тех. задание"
+              style="width: 80%; margin: auto;"
+          ></v-select>
           <div v-if="isErrorInput">
             <p style="color: red;">Заполните все поля</p>
           </div>
@@ -108,15 +112,31 @@
           <v-card-title class="headline">{{ this.str }}
           </v-card-title>
           <v-text-field
-              label="Название"
-              v-model="editedItem.task_name"
+              label="Номер набора"
+              v-model="editedItem.kit_number"
               style="width: 80%; margin: auto"
           ></v-text-field>
           <v-text-field
-              label="Номер"
-              v-model="editedItem.task_number"
+              label="Кол-во партий"
+              v-model.number="editedItem.batches_quantity"
               style="width: 80%; margin: auto"
+              type="number"
           ></v-text-field>
+          <v-text-field
+              label="Кол-во изделий в париях"
+              v-model.number="editedItem.batch_size"
+              style="width: 80%; margin: auto"
+              type="number"
+          ></v-text-field>
+          <v-select
+              item-color="secondary"
+              :items="techSpec"
+              item-text="titleSpec"
+              item-value="specification_id"
+              v-model="editedItem.specification_id"
+              label="Тех. задание"
+              style="width: 80%; margin: auto;"
+          ></v-select>
           <div v-if="isErrorInput">
             <p style="color: red;">Заполните все поля</p>
           </div>
@@ -228,18 +248,22 @@ export default {
       deleteBatchDialog: false,
       addBatchDialog: false,
       str: '',
-      editingIndex: -1,
+      editedIndex: -1,
       editingBatchIndex: -1,
       editedBatchTask: {},
       editedItem: {
-        task_name: "",
-        task_number: ""
+        id:0,
+        kit_number: "",
+        batches_quantity: 0,
+        batch_size: 0,
+        specification_id: 0
       },
       defaultItem: {
-        task_name: "",
-        task_number: "",
-        batch_number: 0,
-        batch_size: 0
+        id:0,
+        kit_number: "",
+        batches_quantity: 0,
+        batch_size: 0,
+        specification_id: 0
       },
       defaultBatch: {
         task_id: 0,
@@ -250,16 +274,15 @@ export default {
       isLoading: false,
       headers: [
         {text: '', value: 'batchList', class: 'primary'},
-        {text: 'Название', value: 'task_name', class: 'primary'},
-        {text: 'Номер', value: 'task_number', class: 'primary'},
-        {text: 'Кол-во', value: 'quantity', class: 'primary'},
-        {text: 'Намотка', value: 'winding', class: 'primary'},
-        {text: 'Вывод', value: 'output', class: 'primary'},
-        {text: 'Изолировка', value: 'isolation', class: 'primary'},
-        {text: 'Формовка', value: 'molding', class: 'primary'},
-        {text: 'Опрессовка', value: 'crimping', class: 'primary'},
-        {text: 'ОТК', value: 'quality', class: 'primary'},
-        {text: 'Испытания', value: 'testing', class: 'primary'},
+        {text: 'Номер', value: 'kit_number', class: 'primary'},
+        {text: 'ТЗ', value: 'specification_title', class: 'primary'},
+        {text: 'Кол-во', value: 'kit_size', class: 'primary'},
+        {text: 'В работе', value: 'products_in_work', class: 'primary'},
+        {text: 'Готово', value: 'products_done', class: 'primary'},
+        {text: 'Прошло ОТК', value: 'otk', class: 'primary'},
+        {text: 'Прошло Испытания', value: 'testing', class: 'primary'},
+        {text: 'Заблокировано', value: 'locked_quantity', class: 'primary'},
+        {text: 'Забраковано', value: 'defected_quantity', class: 'primary'},
         {text: '', value: 'edit', class: 'primary'}
       ],
       batchHead: [
@@ -277,31 +300,49 @@ export default {
         {text: '', value: 'delete'}
       ],
       tasks: [],
-      batches: []
+      batches: [],
+      techSpec:[]
     }
   },
   methods: {
     openDeleteDialog(item) {
       this.deleteDialog = true;
       this.editedIndex = item
+      console.log(item);
     },
-    openEditDialog(item, str) {
+    async openEditDialog(item, str) {
       this.str = str;
       this.editedIndex = this.tasks.indexOf(item)
       this.editedItem.id = item.id;
-      this.editedItem.task_name = item.task_name;
-      this.editedItem.task_number = item.task_number;
+      console.log(this.editedItem.id)
+      const res = await axios.get(DOMAIN_NAME + 'v2/kit/' + this.editedItem.id);
+      this.editedItem.kit_number = res.data.kit_number;
+      this.editedItem.batches_quantity = res.data.batches_quantity;
+      this.editedItem.batch_size = res.data.batch_size;
+      this.editedItem.specification_id = res.data.specification_id;
       this.editDialog = true;
     },
-    openDialog(item, str) {
+    async openDialog(item, str) {
       this.str = str;
       this.editedIndex = this.tasks.indexOf(item)
       this.defaultItem = Object.assign({}, item)
       this.dialog = true;
     },
+    listOfSpec(arr){
+      arr.forEach((item) => {
+      let temp={
+        specification_id: 0,
+        titleSpec:''
+      }
+      temp.specification_id = item.id;
+      temp.titleSpec = item.specification_title;
+      this.techSpec.push(temp);
+      });
+
+    },
     openBatchDialog(item) {
       this.editedBatchTask = item;
-      this.editingIndex = item.index;
+      this.editedIndex = item.index;
       this.batches = item.batches;
       this.batchDialog = true;
     },
@@ -318,27 +359,31 @@ export default {
       this.addBatchDialog = true;
     },
     async load() {
+      this.techSpec=[];
       this.tasks = [];
       this.isLoading = true;
-      const res = await axios.get(DOMAIN_NAME + '/task/full');
+      const res = await axios.get(DOMAIN_NAME + 'v2/kit/progress');
       this.totalCount(res.data);
+      const ts = await axios.get(DOMAIN_NAME + 'v2/specification');
+      this.listOfSpec(ts.data);
       this.isLoading = false;
     },
     async deleteTask() {
-      await axios.delete(DOMAIN_NAME + "/task/" + this.editedIndex);
+      await axios.delete(DOMAIN_NAME + "v2/kit/" + this.editedIndex);
       this.deleteDialog = false;
       await this.load();
     },
     async saveTasks() {
-      if (this.defaultItem.task_name !== '' && this.defaultItem.task_number !== '') {
+      if (this.defaultItem.kit_number !== '') {
         this.isErrorInput = false;
-        await axios.post(DOMAIN_NAME + "task", this.defaultItem);
+        await axios.post(DOMAIN_NAME + "v2/kit", this.defaultItem);
         this.defaultItem = {
-          task_name: "",
-          task_number: "",
-          batch_number: 0,
-          batch_size: 0
-        }
+          id:0,
+          kit_number: "",
+              batches_quantity: 0,
+              batch_size: 0,
+              specification_id: 0
+        },
 
         this.dialog = false;
         await this.load();
@@ -347,10 +392,10 @@ export default {
       }
     },
     async editTasks() {
-      if (this.editedItem.task_name !== '' && this.editedItem.task_number !== '') {
+      if (this.editedItem.kit_number) {
         this.isErrorInput = false;
         console.log('send');
-        await axios.put(DOMAIN_NAME+"task", this.editedItem);
+        await axios.put(DOMAIN_NAME+"v2/kit", this.editedItem);
         this.editDialog = false;
         await this.load();
       } else {
@@ -388,30 +433,27 @@ export default {
       arr.forEach((item) => {
         let temp = {
           id: 0,
-          task_name: "",
-          task_number: "",
-          quantity: 0,
-          winding: 0,
-          output: 0,
-          isolation: 0,
-          molding: 0,
-          crimping: 0,
-          quality: 0,
+          kit_number: "",
+          specification_title: "",
+          kit_size: 0,
+          products_in_work: 0,
+          products_done: 0,
+          locked_quantity: 0,
+          defected_quantity: 0,
+          otk: 0,
           testing: 0,
-          batches: []
+          control_progress: []
         };
-        temp.id = item.id;
-        temp.task_name = item.task_name;
-        temp.task_number = item.task_number;
-        temp.quantity = item.batches.reduce((acc, b) => acc + b.quantity, 0);
-        temp.winding = item.batches.reduce((acc, b) => acc + b.winding, 0);
-        temp.output = item.batches.reduce((acc, b) => acc + b.output, 0);
-        temp.isolation = item.batches.reduce((acc, b) => acc + b.isolation, 0);
-        temp.molding = item.batches.reduce((acc, b) => acc + b.molding, 0);
-        temp.crimping = item.batches.reduce((acc, b) => acc + b.crimping, 0);
-        temp.quality = item.batches.reduce((acc, b) => acc + b.quality, 0);
-        temp.testing = item.batches.reduce((acc, b) => acc + b.testing, 0);
-        temp.batches = item.batches;
+        temp.id = item.kit_id;
+        temp.kit_number = item.kit_number;
+        temp.specification_title = item.specification_title;
+        temp.kit_size = item.kit_size;
+        temp.products_in_work = item.products_in_work;
+        temp.products_done = item.products_done;
+        temp.locked_quantity = item.locked_quantity;
+        temp.defected_quantity = item.defected_quantity;
+        if(item.control_progress.OTK) {temp.otk = item.control_progress.OTK}
+        if(item.control_progress.testing) {temp.testing = item.control_progress.testing}
         this.tasks.push(temp);
       })
     }
