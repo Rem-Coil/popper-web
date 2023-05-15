@@ -148,7 +148,7 @@
         </v-card>
       </v-dialog>
 
-      <v-dialog v-model="batchDialog" persistent max-width="70vw">
+      <v-dialog v-model="batchDialog" persistent max-width="90vw">
         <v-card>
           <v-card-title class="headline" style="margin-left: 2%;">
             <p>Партии</p>
@@ -158,7 +158,7 @@
           <v-data-table
               :headers="batchHead"
               :items="batches"
-              height="60vh"
+              height="70vh"
               style="margin-left: 1%; margin-right: 1%"
               :items-per-page="-1"
               :footer-props="footerProps"
@@ -170,52 +170,12 @@
                 <v-icon> mdi-qrcode</v-icon>
               </router-link>
             </template>
-            <template v-slot:[`item.delete`]="props">
-              <v-icon @click="openDeleteBatchDialog(props.item, props.item.id)"> mdi-delete</v-icon>
-            </template>
             <template v-slot:[`item.progress`]="props">
               <router-link :to="'/Progress/'+props.item.id" tag="button">
                 <v-icon> mdi-table-eye</v-icon>
               </router-link>
             </template>
           </v-data-table>
-          <v-card-actions>
-            <v-btn color="secondary" @click="openAddBatchDialog(defaultBatch)" style="margin: 1%">
-              Добавить партию
-            </v-btn>
-            <v-spacer></v-spacer>
-            <v-btn color="secondary" @click="batchDialog = false" style="margin: 1%">Закрыть</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-
-      <v-dialog v-model="deleteBatchDialog" persistent max-width="300">
-        <v-card>
-          <v-card-title class="headline">Удаление</v-card-title>
-          <v-card-text>Вы уверены, что хотите удалить партию?
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="secondary" flat @click="deleteBatch">Да</v-btn>
-            <v-btn color="secondary" flat @click="deleteBatchDialog = false">Отмена</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-
-      <v-dialog v-model="addBatchDialog" persistent max-width="500">
-        <v-card>
-          <v-card-title class="headline">Добавление партии</v-card-title>
-          <v-text-field
-              label="Количество катушек в партии"
-              v-model.number="defaultBatch.batch_size"
-              style="width: 80%; margin: auto"
-              type="number"
-          ></v-text-field>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="secondary" flat @click="saveBatch">Сохранить</v-btn>
-            <v-btn color="secondary" flat @click="addBatchDialog = false;">Отмена</v-btn>
-          </v-card-actions>
         </v-card>
       </v-dialog>
     </v-card>
@@ -227,6 +187,7 @@
 import titleHead from './Head.vue';
 import axios from 'axios';
 import {DOMAIN_NAME} from "@/api/api";
+
 export default {
   name: "tasksScreen",
   async created() {
@@ -237,7 +198,7 @@ export default {
   },
   data() {
     return {
-      domain : DOMAIN_NAME,
+      domain: DOMAIN_NAME,
       expanded: [],
       singleExpand: false,
       isErrorInput: false,
@@ -245,21 +206,17 @@ export default {
       editDialog: false,
       dialog: false,
       batchDialog: false,
-      deleteBatchDialog: false,
-      addBatchDialog: false,
       str: '',
       editedIndex: -1,
-      editingBatchIndex: -1,
-      editedBatchTask: {},
       editedItem: {
-        id:0,
+        id: 0,
         kit_number: "",
         batches_quantity: 0,
         batch_size: 0,
         specification_id: 0
       },
       defaultItem: {
-        id:0,
+        id: 0,
         kit_number: "",
         batches_quantity: 0,
         batch_size: 0,
@@ -287,21 +244,12 @@ export default {
       ],
       batchHead: [
         {text: '', value: 'progress', width: '1%'},
-        {text: 'Номер партии', value: 'batch_number', width: '13%'},
-        {text: 'Количество', value: 'quantity'},
-        {text: 'Намотка', value: 'winding'},
-        {text: 'Вывод', value: 'output'},
-        {text: 'Изолировка', value: 'isolation'},
-        {text: 'Формовка', value: 'molding'},
-        {text: 'Опрессовка', value: 'crimping'},
-        {text: 'ОТК', value: 'quality'},
-        {text: 'Испытания', value: 'testing'},
-        {text: '', value: 'qrcode'},
-        {text: '', value: 'delete'}
+        {text: 'Номер партии', value: 'batch_number'},
+        {text: 'Кол-во', value: 'quantity'}
       ],
       tasks: [],
       batches: [],
-      techSpec:[]
+      techSpec: []
     }
   },
   methods: {
@@ -328,38 +276,80 @@ export default {
       this.defaultItem = Object.assign({}, item)
       this.dialog = true;
     },
-    listOfSpec(arr){
+    listOfSpec(arr) {
       arr.forEach((item) => {
-      let temp={
-        specification_id: 0,
-        titleSpec:''
-      }
-      temp.specification_id = item.id;
-      temp.titleSpec = item.specification_title;
-      this.techSpec.push(temp);
+        let temp = {
+          specification_id: 0,
+          titleSpec: ''
+        }
+        temp.specification_id = item.id;
+        temp.titleSpec = item.specification_title;
+        this.techSpec.push(temp);
       });
 
     },
-    openBatchDialog(item) {
-      this.editedBatchTask = item;
-      this.editedIndex = item.index;
-      this.batches = item.batches;
+    async openBatchDialog(item) {
+      this.batchHead= [
+        {text: '', value: 'progress', width: '1%'},
+        {text: 'Номер партии', value: 'batch_number'},
+        {text: 'Кол-во', value: 'quantity'}
+      ];
+      this.batches = [];
+      this.editedIndex = item.id;
+      console.log(this.editedIndex)
+      const res = await axios.get(DOMAIN_NAME + 'v2/kit/' + this.editedIndex + '/progress');
+      this.batchesHead(res.data);
+      this.batchCount(res.data);
       this.batchDialog = true;
     },
-    openDeleteBatchDialog(item, id) {
-      console.log(item)
-      this.deleteBatchDialog = true;
-      this.editingBatchIndex = id;
-      this.editedBatch = item;
+    batchesHead(arr) {
+      arr.operation_types.sort(function (a, b) {
+        if (a.sequence_number > b.sequence_number) {
+          return 1
+        } else {
+          return -1
+        }
+      });
+      arr.operation_types.forEach((item) => {
+        let temp = {text: '', value: ''};
+        temp.text = item.type;
+        temp.value = item.id.toString();
+        this.batchHead.push(temp);
+      });
+      this.batchHead.push({text: 'Испытания', value: 'testing'});
+      this.batchHead.push({text: 'ОТК', value: 'otk'});
+      this.batchHead.push({text: 'Заблокировано', value: 'locked_quantity'});
+      this.batchHead.push({text: 'Забраковано', value: 'defected_quantity'});
+      this.batchHead.push({text: '', value: 'qrcode'});
     },
-    openAddBatchDialog(item) {
-      this.defaultBatch = Object.assign({}, item);
-      this.defaultBatch.task_id = this.editedBatchTask.id;
-      console.log(this.defaultBatch);
-      this.addBatchDialog = true;
+    batchCount(arr) {
+      let num = arr.kit_number;
+      let batch_size = arr.batch_size;
+      let kit_id = arr.id;
+      let tempArr = [];
+      arr.batches_progress.forEach((item) => {
+        let temp = {};
+        this.batchHead.forEach((op) => {
+          if (item.operations_progress[op.value]) {
+            temp[op.value] = item.operations_progress[op.value];
+          } else {
+            temp[op.value] = 0;
+          }
+        })
+        temp.batch_number = `${num}/${item.batch_number}`;
+        temp.batch_size = batch_size;
+        temp.locked_quantity = item.locked_quantity;
+        temp.defected_quantity=item.defected_quantity;
+        temp.otk = item.control_progress.OTK;
+        temp.testing = item.control_progress.TESTING;
+        temp.id = item.id;
+        temp.kit_id=kit_id;
+        tempArr.push(temp);
+      })
+      this.batches = tempArr;
     },
     async load() {
-      this.techSpec=[];
+      this.techSpec = [];
       this.tasks = [];
       this.isLoading = true;
       const res = await axios.get(DOMAIN_NAME + 'v2/kit/progress');
@@ -378,14 +368,14 @@ export default {
         this.isErrorInput = false;
         await axios.post(DOMAIN_NAME + "v2/kit", this.defaultItem);
         this.defaultItem = {
-          id:0,
+          id: 0,
           kit_number: "",
-              batches_quantity: 0,
-              batch_size: 0,
-              specification_id: 0
+          batches_quantity: 0,
+          batch_size: 0,
+          specification_id: 0
         },
 
-        this.dialog = false;
+            this.dialog = false;
         await this.load();
       } else {
         this.isErrorInput = true;
@@ -395,39 +385,12 @@ export default {
       if (this.editedItem.kit_number) {
         this.isErrorInput = false;
         console.log('send');
-        await axios.put(DOMAIN_NAME+"v2/kit", this.editedItem);
+        await axios.put(DOMAIN_NAME + "v2/kit", this.editedItem);
         this.editDialog = false;
         await this.load();
       } else {
         this.isErrorInput = true;
       }
-    },
-    async deleteBatch() {
-      await axios.delete(DOMAIN_NAME+"batch/" + this.editingBatchIndex);
-      this.deleteBatchDialog = false;
-      await this.load();
-      this.tasks.forEach((item) => {
-            if (item.id === this.editedBatchTask.id) {
-              this.openBatchDialog(item);
-            }
-          }
-      );
-    },
-    async saveBatch() {
-      await axios.post(DOMAIN_NAME+"batch", this.defaultBatch);
-      this.defaultBatch = {
-        task_id: 0,
-        batch_size: 0
-      }
-
-      this.addBatchDialog = false;
-      await this.load();
-      this.tasks.forEach((item) => {
-            if (item.id === this.editedBatchTask.id) {
-              this.openBatchDialog(item);
-            }
-          }
-      );
     },
     totalCount(arr) {
       arr.forEach((item) => {
@@ -452,8 +415,12 @@ export default {
         temp.products_done = item.products_done;
         temp.locked_quantity = item.locked_quantity;
         temp.defected_quantity = item.defected_quantity;
-        if(item.control_progress.OTK) {temp.otk = item.control_progress.OTK}
-        if(item.control_progress.testing) {temp.testing = item.control_progress.testing}
+        if (item.control_progress.OTK) {
+          temp.otk = item.control_progress.OTK
+        }
+        if (item.control_progress.testing) {
+          temp.testing = item.control_progress.testing
+        }
         this.tasks.push(temp);
       })
     }
