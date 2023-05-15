@@ -337,7 +337,7 @@ export default {
           }
         })
         temp.batch_number = `${num}/${item.batch_number}`;
-        temp.batch_size = batch_size;
+        temp.quantity = batch_size;
         temp.locked_quantity = item.locked_quantity;
         temp.defected_quantity=item.defected_quantity;
         temp.otk = item.control_progress.OTK;
