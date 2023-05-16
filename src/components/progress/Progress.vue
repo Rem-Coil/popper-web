@@ -20,10 +20,10 @@
             :to="'/Progress/'+ id+'/'+item.id">
 
           <v-list-item-content style="padding:0">
-            <p style="text-align: center; padding:2%; margin-bottom: 0; margin-top: 2%;">{{ item.bobbin_number }}</p>
-            <p style="text-align: center; margin-bottom: 2%; margin-top: 0; font-size: 12px">
-              {{ item.action_type }}
-            </p>
+            <p style="text-align: left; margin-left: 2%; padding:2%; margin-bottom: 0; margin-top: 2%;">{{ `${title}/${item.bobbin_number}`}}</p>
+<!--            <p style="text-align: center; margin-bottom: 2%; margin-top: 0; font-size: 12px">-->
+<!--              {{ item.action_type }}-->
+<!--            </p>-->
           </v-list-item-content>
 
         </v-list-item>
@@ -52,47 +52,17 @@ export default {
   data() {
     return {
       title: "",
-      items: [],
-      translate: [
-        {
-          ru: 'Намотка',
-          en: 'winding'
-        },
-        {
-          ru: 'Вывод',
-          en: 'output'
-        },
-        {
-          ru: 'Изолировка',
-          en: 'isolation'
-        },
-        {
-          ru: 'Формовка',
-          en: 'molding'
-        },
-        {
-          ru: 'Опрессовка',
-          en: 'crimping'
-        },
-        {
-          ru: 'ОТК',
-          en: 'quality'
-        },
-        {
-          ru: 'Испытания',
-          en: 'testing'
-        },
-
-      ]
+      items: []
     }
   },
   methods: {
 
     async load() {
-      const res = await axios.get(DOMAIN_NAME+'batch/' + this.id + '/bobbin');
+      const res = await axios.get(DOMAIN_NAME+'v2/batch/' + this.id + '/product');
+      const batch = await axios.get(DOMAIN_NAME+'v2/batch/' + this.id);
+      const kit = await axios.get(DOMAIN_NAME+'v2/kit/' + batch.data.kit_id);
+      this.title = `${kit.data.kit_number}-${batch.data.batch_number}`;
       await this.totalCount(res.data);
-      const t = await axios.get(DOMAIN_NAME+'batch/' + this.id);
-      this.title = t.data.batch_number;
     },
     totalCount: async function (bobbins) {
       let tmp = [];
@@ -101,30 +71,25 @@ export default {
         let temp = {
           id: String,
           bobbin_number: Number,
-          action_type: String,
           successful: Boolean
         };
-        const res = await axios.get(DOMAIN_NAME+'action/bobbin/' + bobbin.id);
+        // const res = await axios.get(DOMAIN_NAME+'v2/action/product/' + bobbin.id);
         temp.id = bobbin.id;
-        temp.bobbin_number = bobbin.bobbin_number;
-        temp.active = bobbin.active;
-        temp.action_type = '';
-        let max = 0;
-        if (res.data.length !== 0) {
-          res.data.forEach((action) => {
-            if (new Date(action.done_time).getTime() > max && action.successful === true) {
-              max = action.done_time;
-              for (const t of this.translate) {
-                if (t.en === action.action_type) {
-                  temp.action_type = t.ru;
-                }
-              }
-            }
-          });
-        }
+        temp.bobbin_number = bobbin.product_number;
+        temp.successful = bobbin.active;
+        // temp.action_type = '';
+        // let max = 0;
+        // if (res.data.length !== 0) {
+        //   res.data.forEach((action) => {
+        //     if (new Date(action.done_time).getTime() > max && action.repair === false) {
+        //       max = action.done_time;
+        //           temp.action_type = action.operation_type;
+        //       }
+        //     })
+        //   }
         tmp.push(temp);
+        }
 
-      }
       this.sortName(tmp)
     },
 
@@ -137,8 +102,8 @@ export default {
             return 1
           }
         } else {
-          let aLast = a.bobbin_number.split(' ');
-          let bLast = b.bobbin_number.split(' ');
+          let aLast = a.bobbin_number;
+          let bLast = b.bobbin_number;
           return aLast[aLast.length - 1] - bLast[bLast.length - 1];
         }
       });
@@ -163,19 +128,3 @@ export default {
   color: #2196f3;
 }
 </style>
-
-
-<!--style="border-bottom: solid 1px #eeeeee;" height = "10%"-->
-<!--<v-flex>-->
-<!--<v-row style="height: 80%">-->
-<!--  <v-col cols="2" id="drawer" style="padding-right: 0">-->
-
-<!--  </v-col>-->
-<!--  <v-col cols="8" style="background-color: #eeeeee; padding-left: 0; padding-right: 0">-->
-<!--    <router-view></router-view>-->
-<!--  </v-col>-->
-<!--  <v-col cols="2" style="padding-left: 0">-->
-<!--    <extra-drawer :bobbin_id="$route.params.bobbin_id"/>-->
-<!--  </v-col>-->
-<!--</v-row>-->
-<!--</v-flex>-->
