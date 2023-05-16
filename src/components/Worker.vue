@@ -42,9 +42,9 @@
           loading-text="Loading... Please wait"
       >
         <template v-slot:[`item.role`]="props">
-          <div v-if="props.item.role ==='quality_engineer'" >Инженер качества</div>
-          <div v-if="props.item.role ==='operator'" >Оператор</div>
-          <div v-if="props.item.role ==='admin'" >Администратор</div>
+          <div v-if="props.item.role ==='QUALITY_ENGINEER'" >Инженер качества</div>
+          <div v-if="props.item.role ==='OPERATOR'" >Оператор</div>
+          <div v-if="props.item.role ==='ADMIN'" >Администратор</div>
         </template>
         <template v-slot:[`item.delete`]="props">
           <v-icon @click="openDeleteDialog(props.item.id)"> mdi-delete</v-icon>
@@ -76,12 +76,7 @@
           ></v-text-field>
           <v-text-field
               label="Фамилия"
-              v-model="editedItem.second_name"
-              style="width: 80%; margin: auto"
-          ></v-text-field>
-          <v-text-field
-              label="Отчество"
-              v-model="editedItem.surname"
+              v-model="editedItem.last_name"
               style="width: 80%; margin: auto"
           ></v-text-field>
           <v-text-field
@@ -108,8 +103,8 @@
           </div>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="secondary" flat @click="saveWorker">Сохранить</v-btn>
-            <v-btn color="secondary" flat @click="dialog = false">Отмена</v-btn>
+            <v-btn color="secondary" @click="saveWorker">Сохранить</v-btn>
+            <v-btn color="secondary" @click="dialog = false">Отмена</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -141,37 +136,35 @@ export default {
       roles: [
         {
           ru: 'Инженер качества',
-          en: 'quality_engineer'
+          en: 'QUALITY_ENGINEER'
         },
         {
           ru: 'Оператор',
-          en: 'operator'
+          en: 'OPERATOR'
         },
         {
           ru: 'Администратор',
-          en: 'admin'
+          en: 'ADMIN'
         },
 
       ],
       editedItem: {
         id: 0,
         first_name: '',
-        second_name: '',
-        surname: '',
+        last_name: '',
         phone: '',
         password: '',
         active: true,
-        role: 'operator'
+        role: 'OPERATOR'
       },
       defaultItem: {
         id: 0,
         first_name: '',
-        second_name: '',
-        surname: '',
+        last_name: '',
         phone: '',
         password: '',
         active: true,
-        role: 'operator'
+        role: 'OPERATOR'
       },
       footerProps: {'items-per-page-options': [5, 8, 10, 20, -1]},
       search: '',
@@ -179,7 +172,6 @@ export default {
       headers: [
         {text: 'Имя', value: 'first_name', class: 'primary'},
         {text: 'Фамилия', value: 'second_name', class: 'primary'},
-        {text: 'Отчество', value: 'surname', class: 'primary'},
         {text: 'Телефон', value: 'phone', class: 'primary'},
         {text: 'Пароль', value: 'password', class: 'primary'},
         {text: 'Роль', value: 'role', class: 'primary'},
@@ -199,14 +191,22 @@ export default {
       this.str = str;
       this.editedIndex = this.workers.indexOf(item)
       this.editedItem = Object.assign({}, item)
-      console.log(this.editedItem)
-      console.log(item)
       this.dialog = true;
+      console.log(this.editedItem)
     },
     async load() {
+      this.editedItem= {
+        id: 0,
+            first_name: '',
+            last_name: '',
+            phone: '',
+            password: '',
+            active: true,
+            role: 'OPERATOR'
+      },
       this.workers = [];
       this.isLoading = true;
-      const res = await axios.get(DOMAIN_NAME+'operator?active_only=true');
+      const res = await axios.get(DOMAIN_NAME+'v2/employee?active_only=true');
       await this.totalCount(res.data);
       this.isLoading = false;
     },
@@ -216,8 +216,7 @@ export default {
 
         temp.id = worker.id;
         temp.first_name = worker.first_name;
-        temp.second_name = worker.second_name;
-        temp.surname = worker.surname;
+        temp.last_name = worker.last_name;
         temp.phone = worker.phone;
         temp.password = worker.password;
         temp.active = worker.active;
@@ -227,19 +226,18 @@ export default {
       }
     },
     async deleteWorker() {
-      await axios.delete(DOMAIN_NAME + "/operator/" + this.editedIndex);
+      await axios.delete(DOMAIN_NAME + "v2/employee/" + this.editedIndex);
       this.deleteDialog = false;
       await this.load();
     },
     async saveWorker() {
-      if (this.editedItem.second_name !== '' && this.editedItem.first_name !== '' && this.editedItem.surname !== ''
+      if (this.editedItem.last_name !== '' && this.editedItem.first_name !== ''
           && this.editedItem.password !== '' && this.editedItem.phone !== '') {
         this.isErrorInput = false;
-        console.log(this.editedItem)
         if (this.editedItem.id !== 0) {
-          await axios.put(DOMAIN_NAME+"operator", this.editedItem);
+          await axios.put(DOMAIN_NAME+"v2/employee", this.editedItem);
         } else {
-          await axios.post(DOMAIN_NAME+"operator/sign_up", this.editedItem);
+          await axios.post(DOMAIN_NAME+"v2/employee/sign_up", this.editedItem);
         }
         this.dialog = false;
         await this.load();
