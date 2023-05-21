@@ -171,7 +171,7 @@ export default {
       isLoading: false,
       headers: [
         {text: 'Имя', value: 'first_name', class: 'primary'},
-        {text: 'Фамилия', value: 'second_name', class: 'primary'},
+        {text: 'Фамилия', value: 'last_name', class: 'primary'},
         {text: 'Телефон', value: 'phone', class: 'primary'},
         {text: 'Пароль', value: 'password', class: 'primary'},
         {text: 'Роль', value: 'role', class: 'primary'},

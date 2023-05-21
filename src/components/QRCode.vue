@@ -54,7 +54,6 @@ export default {
         b_num = item.batch_number
       }
       });
-      console.log(kit);
       const res = await axios.get(DOMAIN_NAME + '/v2/kit/' + kit);
       let specific = res.data.specification_id;
       let k_num = res.data.kit_number;
