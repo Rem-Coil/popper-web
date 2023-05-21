@@ -59,7 +59,7 @@ export default {
     async signIN() {
       this.error = '';
       try {
-        let answer = await axios.post(DOMAIN_NAME + "operator/sign_in", this.admin);
+        let answer = await axios.post(DOMAIN_NAME + "v2/employee/sign_in", this.admin);
         let token = answer.data.token;
         let decoded = jwt_decode(token);
 
