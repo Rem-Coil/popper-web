@@ -63,8 +63,9 @@ export default {
         let token = answer.data.token;
         let decoded = jwt_decode(token);
 
-        if (decoded.role !== 'admin') {
+        if (decoded.role !== 'ADMIN') {
           this.error = "У вас нет доступа к сайту!";
+          console.log(decoded.role)
           return;
         }
 
