@@ -45,18 +45,18 @@ export default {
   },
   methods: {
     async load() {
-      const res = await axios.get(DOMAIN_NAME + 'v2/product/' + this.bobbin_id);
-      const opOPerations = await axios.get(DOMAIN_NAME + 'v2/action/product/' + this.bobbin_id);
+      const res = await axios.get(DOMAIN_NAME + '/product/' + this.bobbin_id);
+      const opOPerations = await axios.get(DOMAIN_NAME + '/action/product/' + this.bobbin_id);
       this.prod_op=opOPerations.data;
       this.attentions = [];
       await this.opNames();
       this.translateActions(res.data);
     },
     async opNames() {
-      const product = await axios.get(DOMAIN_NAME + 'v2/product/' + this.bobbin_id);
-      const batch = await axios.get(DOMAIN_NAME + 'v2/batch/' + product.data.batch_id);
-      const kit = await axios.get(DOMAIN_NAME + 'v2/kit/' + batch.data.kit_id);
-      const spec = await axios.get(DOMAIN_NAME + 'v2/specification/' + kit.data.specification_id);
+      const product = await axios.get(DOMAIN_NAME + '/product/' + this.bobbin_id);
+      const batch = await axios.get(DOMAIN_NAME + '/batch/' + product.data.batch_id);
+      const kit = await axios.get(DOMAIN_NAME + '/kit/' + batch.data.kit_id);
+      const spec = await axios.get(DOMAIN_NAME + '/specification/' + kit.data.specification_id);
       let oper_type = [];
       spec.data.operation_types.forEach((item) => {
         let temp = {

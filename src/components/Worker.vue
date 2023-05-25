@@ -206,7 +206,7 @@ export default {
       },
       this.workers = [];
       this.isLoading = true;
-      const res = await axios.get(DOMAIN_NAME+'v2/employee?active_only=true');
+      const res = await axios.get(DOMAIN_NAME+'/employee?active_only=true');
       await this.totalCount(res.data);
       this.isLoading = false;
     },
@@ -226,7 +226,7 @@ export default {
       }
     },
     async deleteWorker() {
-      await axios.delete(DOMAIN_NAME + "v2/employee/" + this.editedIndex);
+      await axios.delete(DOMAIN_NAME + "/employee/" + this.editedIndex);
       this.deleteDialog = false;
       await this.load();
     },
@@ -235,9 +235,9 @@ export default {
           && this.editedItem.password !== '' && this.editedItem.phone !== '') {
         this.isErrorInput = false;
         if (this.editedItem.id !== 0) {
-          await axios.put(DOMAIN_NAME+"v2/employee", this.editedItem);
+          await axios.put(DOMAIN_NAME+"/employee", this.editedItem);
         } else {
-          await axios.post(DOMAIN_NAME+"v2/employee/sign_up", this.editedItem);
+          await axios.post(DOMAIN_NAME+"/employee/sign_up", this.editedItem);
         }
         this.dialog = false;
         await this.load();

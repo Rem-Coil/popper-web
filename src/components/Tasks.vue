@@ -263,7 +263,7 @@ export default {
       this.editedIndex = this.tasks.indexOf(item)
       this.editedItem.id = item.id;
       console.log(this.editedItem.id)
-      const res = await axios.get(DOMAIN_NAME + 'v2/kit/' + this.editedItem.id);
+      const res = await axios.get(DOMAIN_NAME + '/kit/' + this.editedItem.id);
       this.editedItem.kit_number = res.data.kit_number;
       this.editedItem.batches_quantity = res.data.batches_quantity;
       this.editedItem.batch_size = res.data.batch_size;
@@ -297,7 +297,7 @@ export default {
       this.batches = [];
       this.editedIndex = item.id;
       console.log(this.editedIndex)
-      const res = await axios.get(DOMAIN_NAME + 'v2/kit/' + this.editedIndex + '/progress');
+      const res = await axios.get(DOMAIN_NAME + 'kit/' + this.editedIndex + '/progress');
       this.batchesHead(res.data);
       this.batchCount(res.data);
       this.batchDialog = true;
@@ -352,21 +352,21 @@ export default {
       this.techSpec = [];
       this.tasks = [];
       this.isLoading = true;
-      const res = await axios.get(DOMAIN_NAME + 'v2/kit/progress');
+      const res = await axios.get(DOMAIN_NAME + 'kit/progress');
       this.totalCount(res.data);
-      const ts = await axios.get(DOMAIN_NAME + 'v2/specification');
+      const ts = await axios.get(DOMAIN_NAME + 'specification');
       this.listOfSpec(ts.data);
       this.isLoading = false;
     },
     async deleteTask() {
-      await axios.delete(DOMAIN_NAME + "v2/kit/" + this.editedIndex);
+      await axios.delete(DOMAIN_NAME + "kit/" + this.editedIndex);
       this.deleteDialog = false;
       await this.load();
     },
     async saveTasks() {
       if (this.defaultItem.kit_number !== '') {
         this.isErrorInput = false;
-        await axios.post(DOMAIN_NAME + "v2/kit", this.defaultItem);
+        await axios.post(DOMAIN_NAME + "kit", this.defaultItem);
         this.defaultItem = {
           id: 0,
           kit_number: "",
@@ -385,7 +385,7 @@ export default {
       if (this.editedItem.kit_number) {
         this.isErrorInput = false;
         console.log('send');
-        await axios.put(DOMAIN_NAME + "v2/kit", this.editedItem);
+        await axios.put(DOMAIN_NAME + "kit", this.editedItem);
         this.editDialog = false;
         await this.load();
       } else {

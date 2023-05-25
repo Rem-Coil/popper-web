@@ -39,8 +39,8 @@ export default {
   methods:{
     async load() {
       this.products = [];
-      const prod = await axios.get(DOMAIN_NAME + `/v2/batch/${this.id}/product`);
-      const batches = await axios.get(DOMAIN_NAME + '/v2/batch');
+      const prod = await axios.get(DOMAIN_NAME + `/batch/${this.id}/product`);
+      const batches = await axios.get(DOMAIN_NAME + '/batch');
 
 
       await this.totalCount(prod.data, batches.data, this.id);
@@ -54,7 +54,7 @@ export default {
         b_num = item.batch_number
       }
       });
-      const res = await axios.get(DOMAIN_NAME + '/v2/kit/' + kit);
+      const res = await axios.get(DOMAIN_NAME + '/kit/' + kit);
       let specific = res.data.specification_id;
       let k_num = res.data.kit_number;
 

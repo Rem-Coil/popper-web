@@ -206,19 +206,19 @@ export default {
       this.seqNum=0;
       this.techSpec = [];
       this.isLoading = true;
-      const res = await axios.get(DOMAIN_NAME + '/v2/specification');
+      const res = await axios.get(DOMAIN_NAME + '/specification');
       this.totalCount(res.data);
       this.isLoading = false;
     },
     async deleteSpec() {
-      await axios.delete(DOMAIN_NAME + "/v2/specification/" + this.editedIndex);
+      await axios.delete(DOMAIN_NAME + "/specification/" + this.editedIndex);
       this.deleteDialog = false;
       await this.load();
     },
     async saveSpec() {
       if (this.defaultItem.specification_title !== '' && this.defaultItem.product_type !== '') {
         this.isErrorInput = false;
-        await axios.post(DOMAIN_NAME + "v2/specification", this.defaultItem);
+        await axios.post(DOMAIN_NAME + "specification", this.defaultItem);
         this.defaultItem = {
           id:0,
           specification_title: "",

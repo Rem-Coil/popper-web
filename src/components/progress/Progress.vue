@@ -58,9 +58,9 @@ export default {
   methods: {
 
     async load() {
-      const res = await axios.get(DOMAIN_NAME+'v2/batch/' + this.id + '/product');
-      const batch = await axios.get(DOMAIN_NAME+'v2/batch/' + this.id);
-      const kit = await axios.get(DOMAIN_NAME+'v2/kit/' + batch.data.kit_id);
+      const res = await axios.get(DOMAIN_NAME+'/batch/' + this.id + '/product');
+      const batch = await axios.get(DOMAIN_NAME+'/batch/' + this.id);
+      const kit = await axios.get(DOMAIN_NAME+'/kit/' + batch.data.kit_id);
       this.title = `${kit.data.kit_number}-${batch.data.batch_number}`;
       await this.totalCount(res.data);
     },
@@ -73,7 +73,6 @@ export default {
           bobbin_number: Number,
           successful: Boolean
         };
-        // const res = await axios.get(DOMAIN_NAME+'v2/action/product/' + bobbin.id);
         temp.id = bobbin.id;
         temp.bobbin_number = bobbin.product_number;
         temp.successful = bobbin.active;

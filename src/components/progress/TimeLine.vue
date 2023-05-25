@@ -82,8 +82,8 @@ export default {
   },
   methods: {
     async load() {
-      const opOPerations = await axios.get(DOMAIN_NAME + 'v2/action/product/' + this.bobbin_id);
-      const qOPerations = await axios.get(DOMAIN_NAME + 'v2/control_action/product/' + this.bobbin_id);
+      const opOPerations = await axios.get(DOMAIN_NAME + '/action/product/' + this.bobbin_id);
+      const qOPerations = await axios.get(DOMAIN_NAME + '/control_action/product/' + this.bobbin_id);
       this.items = [];
       this.specOp = [];
       this.prodOp = opOPerations.data;
@@ -91,10 +91,10 @@ export default {
       await this.totalCount(opOPerations.data, qOPerations.data);
     },
     async totalCount(actions, testing) {
-      const product = await axios.get(DOMAIN_NAME + 'v2/product/' + actions[0].product_id);
-      const batch = await axios.get(DOMAIN_NAME + 'v2/batch/' + product.data.batch_id);
-      const kit = await axios.get(DOMAIN_NAME + 'v2/kit/' + batch.data.kit_id);
-      const spec = await axios.get(DOMAIN_NAME + 'v2/specification/' + kit.data.specification_id);
+      const product = await axios.get(DOMAIN_NAME + '/product/' + actions[0].product_id);
+      const batch = await axios.get(DOMAIN_NAME + '/batch/' + product.data.batch_id);
+      const kit = await axios.get(DOMAIN_NAME + '/kit/' + batch.data.kit_id);
+      const spec = await axios.get(DOMAIN_NAME + '/specification/' + kit.data.specification_id);
       let oper_type = [];
       spec.data.operation_types.forEach((item) => {
         let temp = {
@@ -108,7 +108,7 @@ export default {
         oper_type.push(temp);
       });
       this.specOp = oper_type;
-      const employee = await axios.get(DOMAIN_NAME + 'v2/employee?active_only=true');
+      const employee = await axios.get(DOMAIN_NAME + '/employee?active_only=true');
       let users = employee.data;
       let operations = [];
       for (const action of actions) {
