@@ -61,6 +61,7 @@ export default {
       try {
         let answer = await axios.post(DOMAIN_NAME + "employee/sign_in", this.admin);
         let token = answer.data.token;
+        axios.defaults.headers.common.Authorization = `Bearer ${token}`;
         let decoded = jwt_decode(token);
 
         if (decoded.role !== 'ADMIN') {
