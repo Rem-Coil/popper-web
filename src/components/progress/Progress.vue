@@ -25,7 +25,11 @@
             :to="'/Progress/'+ id+'/'+item.id">
 
           <v-list-item-content style="padding:0">
-            <p style="text-align: left; margin-left: 2%; padding:2%; margin-bottom: 0; margin-top: 2%;">{{ `${title}/${item.bobbin_number}`}}</p>
+            <div>
+            <p style="display: inline-block; text-align: left; margin-left: 2%; padding:2%; margin-bottom: 0; margin-top: 2%;">{{ `${title}/${item.bobbin_number}`}}
+              </p>
+              <p v-if="!item.successful" style="display: inline-block">(defect)</p>
+            </div>
           </v-list-item-content>
 
         </v-list-item>
@@ -112,16 +116,14 @@ export default {
 
     sortName(bobbins) {
       bobbins.sort(function (a, b) {
-        if (a.active !== b.active) {
-          if (a.active) {
+        if (a.successful !== b.successful) {
+          if (a.successful) {
             return -1
           } else {
             return 1
           }
         } else {
-          let aLast = a.bobbin_number;
-          let bLast = b.bobbin_number;
-          return aLast[aLast.length - 1] - bLast[bLast.length - 1];
+          return a.bobbin_number - b.bobbin_number;
         }
       });
       this.items = bobbins;
@@ -137,7 +139,7 @@ export default {
   height: auto;
   color: #2196f3;
   border-left: solid 5px #2196f3;
-  text-align: left;
+  /* text-align: left; */
   background-color: #dceffd;
 }
 
