@@ -47,10 +47,12 @@ export default {
     async load() {
       const res = await axios.get(DOMAIN_NAME + '/product/' + this.bobbin_id);
       const opOPerations = await axios.get(DOMAIN_NAME + '/action/product/' + this.bobbin_id);
+      const conOPerations = await axios.get(DOMAIN_NAME + 'control_action/product/' + this.bobbin_id);
       this.prod_op=opOPerations.data;
       this.attentions = [];
       await this.opNames();
       this.translateActions(res.data);
+      this.controlActions(conOPerations.data)
     },
     async opNames() {
       const product = await axios.get(DOMAIN_NAME + '/product/' + this.bobbin_id);
@@ -71,6 +73,21 @@ export default {
       });
       this.spec_op = oper_type;
     },
+    controlActions(res){
+      let failControl = res.filter((o) => !o.successful);
+      let operations = this.prod_op.filter((o) => o.repair);
+      // console.log(failControl)
+      console.log(this.spec_op)
+      for (let i = 0; i < failControl.length ; i++) {
+        console.log(operations.find(item => item.operation_type === failControl[i].operation_type))
+        if(!(operations.find(item => item.operation_type === failControl[i].operation_type) && 
+         new Date(operations.find(item => item.operation_type == failControl[i].operation_type).done_time) > new Date(failControl[i].done_time))
+){
+this.attentions.push({name: `Имеется невыполненный ремонт (${this.spec_op.find(item => item.id == failControl[i].operation_type).type})`})
+        }
+      }
+    },
+
     translateActions(result) {
       if (!result.active) {
         this.attentions.push({name: 'Изделие забраковано'})
@@ -84,7 +101,6 @@ export default {
         if (a_time === b_time) return 0;
         return -1;
       });
-
       let spec = this.spec_op;
       spec.sort((a, b) => {
         if (a.sequence_number > b.sequence_number) return 1;

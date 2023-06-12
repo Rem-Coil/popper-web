@@ -73,7 +73,7 @@ export default {
         localStorage.setItem('token', token);
         await router.replace('/');
       } catch (e) {
-        if (e.response.status === 401) {
+        if (e.response.status === 400) {
           this.error = "Введены неверные логин или пароль";
         }
       }

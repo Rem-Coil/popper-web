@@ -57,7 +57,7 @@
       <v-dialog v-model="deleteDialog" persistent max-width="300">
         <v-card>
           <v-card-title class="headline">Удаление</v-card-title>
-          <v-card-text>Вы уверены, что хотите удалить задачу?
+          <v-card-text>Вы уверены, что хотите удалить набор?
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
