@@ -1,21 +1,10 @@
-import Vue from 'vue'
-import App from './App.vue'
-import vuetify from './plugins/vuetify'
-import 'vuetify/dist/vuetify.min.css'
-import router from "./router"
-import axios from 'axios'
+import { createApp } from 'vue'
+import App from '@/App.vue'
+import router from '@/plugins/router'
+import naive from 'naive-ui'
 
-Vue.use(vuetify)
-
-Vue.config.productionTip = false
-
-new Vue({
-  vuetify,
-  router,
-  render: h => h(App)
-}).$mount('#app')
-
-let token = localStorage.getItem('token')
-if (token !== null) {
-  axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-}
+// Not Recomended use Naive: https://www.naiveui.com/en-US/os-theme/docs/usage-sfc
+createApp(App)
+    .use(naive)
+    .use(router)
+    .mount('#app')

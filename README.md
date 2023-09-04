@@ -1,24 +1,17 @@
-# popper-web
+# Popper Web (v0.3.1)
 
-## Project setup
-```
-npm install
-```
+Stack:
+* Vue 3 + Vite
+* Vue Router
+* Naive UI
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+Links:
+* [Vue 3 Docs](https://vuejs.org/)
+* [Vue Router Docs](https://router.vuejs.org/)
+* [Naive UI](https://www.naiveui.com/en-US/os-theme)
 
-### Compiles and minifies for production
-```
-npm run build
-```
+### Vue 3 Api Reference
+This version of the project mainly uses the *Сomposition Api*. You can find it at this [link](https://vuejs.org/guide/introduction.html#api-styles).
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Alias in paths
+In order to refer to the `src` folder, you can use an alias `@`.
