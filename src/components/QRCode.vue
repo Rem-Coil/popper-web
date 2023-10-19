@@ -80,7 +80,7 @@ export default {
 
 <style scoped>
 .pad {
-  padding: 3em 0.5em 0em 0.5em;
+  padding: 80px 10px 0em 10px;
   font-weight: bolder;
 }
 
