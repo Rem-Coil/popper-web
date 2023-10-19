@@ -1,18 +1,20 @@
 <template>
   <table>
-    <tr v-for = "i in stroke" :key="i"><td v-for = "item in products.slice((i-1)*7, 7*(i-1)+7)" :key="item.id" class="pad">
-      <div>
-        <p>{{item.kit_num}}-{{item.batch_num}}/{{item.prod_num}}</p>
-      <qrcode-vue :value="`s:${item.specification_id};p:${item.id};`"  level="H"></qrcode-vue>
-      </div>
-    </td></tr>
+    <tr v-for="i in stroke" :key="i">
+      <td v-for="item in products.slice((i - 1) * 7, 7 * (i - 1) + 7)" :key="item.id" class="pad">
+        <div>
+          <p class="pad-text">{{ item.kit_num }}-{{ item.batch_num }}/{{ item.prod_num }}</p>
+          <qrcode-vue :value="`s:${item.specification_id};p:${item.id};`" level="H" />
+        </div>
+      </td>
+    </tr>
   </table>
 </template>
 
 <script>
 import QrcodeVue from 'qrcode.vue'
 import axios from "axios";
-import {DOMAIN_NAME} from "@/api/api";
+import { DOMAIN_NAME } from "@/api/api";
 
 export default {
   name: 'QrPage',
@@ -28,7 +30,7 @@ export default {
   data() {
     return {
       products: [],
-      stroke:0
+      stroke: 0
     }
   },
 
@@ -36,7 +38,7 @@ export default {
     await this.load()
   },
 
-  methods:{
+  methods: {
     async load() {
       this.products = [];
       const prod = await axios.get(DOMAIN_NAME + `/batch/${this.id}/product`);
@@ -45,40 +47,44 @@ export default {
 
       await this.totalCount(prod.data, batches.data, this.id);
     },
-    async totalCount(prod, batches, id){
+    async totalCount(prod, batches, id) {
       let kit = '';
       let b_num = '';
-      batches.forEach((item) =>{
-      if (item.id == id){
-        kit = item.kit_id
-        b_num = item.batch_number
-      }
+      batches.forEach((item) => {
+        if (item.id == id) {
+          kit = item.kit_id
+          b_num = item.batch_number
+        }
       });
       const res = await axios.get(DOMAIN_NAME + '/kit/' + kit);
       let specific = res.data.specification_id;
       let k_num = res.data.kit_number;
 
-      prod.forEach((item) =>{
-        let product= {
+      prod.forEach((item) => {
+        let product = {
           specification_id: specific,
           id: 0,
           prod_num: 0,
           kit_num: k_num,
           batch_num: b_num
         };
-          product.id = item.id;
-          product.prod_num = item.product_number;
-          this.products.push(product)
+        product.id = item.id;
+        product.prod_num = item.product_number;
+        this.products.push(product)
       });
-      this.stroke = Math.floor(this.products.length/7) +1;
+      this.stroke = Math.floor(this.products.length / 7) + 1;
     }
   }
 }
 </script>
 
-<style>
-.pad{
-  padding: 1em;
+<style scoped>
+.pad {
+  padding: 3em 0.5em 0em 0.5em;
   font-weight: bolder;
+}
+
+.pad-text {
+  font-size: small;
 }
 </style>
