@@ -6,10 +6,10 @@ import QRCodesScreen from '@/screens/QRCodesScreen.vue';
 
 const ifAuth = (to, from, next) => {
     let token = localStorage.getItem('token')
-    if (token === null) {
-        next({ name: 'Login' });
-        return;
-    }
+    // if (token === null) {
+    //     next({ name: 'Login' });
+    //     return;
+    // }
 
     next();
 }
