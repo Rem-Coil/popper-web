@@ -1,4 +1,4 @@
-# Popper Web (v0.3.1)
+# Popper Web (v0.4.0)
 
 Stack:
 * Vue 3 + Vite
