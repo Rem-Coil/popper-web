@@ -1,8 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-import LoginScreen from '@/screens/LoginScreen.vue';
-import MainScreen from '@/screens/MainScreen.vue';
-import QRCodesScreen from '@/screens/QRCodesScreen.vue';
+import LoginScreen from '@/screens/login/LoginScreen.vue';
+import MainScreen from '@/screens/main/MainScreen.vue';
+import QRCodesScreen from '@/screens/qr_code/QRCodesScreen.vue';
+import KitsScreen from '@/screens/kits/KitsScreen.vue';
+import WorkersScreen from '@/screens/workers/WorkersScreen.vue';
+import TasksScreen from '@/screens/tasks/TasksScreen.vue';
 
 const ifAuth = (to, from, next) => {
     let token = localStorage.getItem('token')
@@ -17,7 +20,22 @@ const ifAuth = (to, from, next) => {
 const router = createRouter({
     history: createWebHistory(),
     routes: [
-        { path: '/', component: MainScreen, beforeEnter: ifAuth },
+        {
+            path: '/', component: MainScreen, beforeEnter: ifAuth, children: [
+                {
+                    path: '',
+                    component: KitsScreen,
+                },
+                {
+                    path: 'tasks',
+                    component: TasksScreen,
+                },
+                {
+                    path: 'workers',
+                    component: WorkersScreen,
+                },
+            ],
+        },
         { path: "/login", component: LoginScreen, name: 'Login' },
         { path: "/qrcode/:id", component: QRCodesScreen, name: 'QR Code' }
     ],
@@ -59,10 +77,10 @@ export default router;
 //                 }
 //             ]
 //         },
-        // {
-        //     path: "/login",
-        //     component: Login,
-        // },
+// {
+//     path: "/login",
+//     component: Login,
+// },
 //         {
 //             path: "/qrcode/:id",
 //             component: QRCode,

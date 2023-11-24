@@ -29,6 +29,11 @@ const themeOverrides = {
     heightMedium: "40px",
     fontSizeMedium: "16px"
   },
+  Typography: {
+    headerMargin1: "0 0 24px 0",
+    headerTextColor: "rgba(51, 54, 57, 1)",
+    headerFontSize1: "30px"
+  },
   Card: {
     borderRadius: "16px"
   }
@@ -37,8 +42,10 @@ const themeOverrides = {
 
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Roboto;
   height: 100vh;
 }
 
